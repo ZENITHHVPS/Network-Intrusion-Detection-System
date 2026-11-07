@@ -1,5 +1,5 @@
-data/raw/*.csv
-data/raw/*.zip
-data/processed/*.csv
+data/
 .venv
 .venv-1
+__pycache__/
+*.pyc

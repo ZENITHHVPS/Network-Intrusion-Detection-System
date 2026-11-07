@@ -1,0 +1,44 @@
+{
+  "thresholds": {
+    "tau_best_f1": 0.0009001644211821258,
+    "tau_p99_benign_val": 0.0015141665935516357
+  },
+  "stacked": {
+    "attack_detection_rate": 0.9987046373981148,
+    "false_positive_rate": 0.0008589332795566411,
+    "missed_attacks": 65,
+    "false_alarms": 230
+  },
+  "stacked_plus_rule_tau_f1": {
+    "attack_detection_rate": 0.9988640666414237,
+    "false_positive_rate": 0.02483437525674636,
+    "missed_attacks": 57,
+    "false_alarms": 6650
+  },
+  "ae_alone_tau_f1": {
+    "attack_detection_rate": 0.7975248609976285,
+    "false_positive_rate": 0.024031459364986893,
+    "missed_attacks": 10160,
+    "false_alarms": 6435
+  },
+  "stacked_plus_rule_tau_p99": {
+    "attack_detection_rate": 0.9987644233643556,
+    "false_positive_rate": 0.011296839872429736,
+    "missed_attacks": 62,
+    "false_alarms": 3025
+  },
+  "ae_alone_tau_p99": {
+    "attack_detection_rate": 0.6401084118854501,
+    "false_positive_rate": 0.010445375577912717,
+    "missed_attacks": 18059,
+    "false_alarms": 2797
+  },
+  "portscan": {
+    "n": 1958,
+    "caught_by_stacked_rf": 0.06230847803881512,
+    "caught_by_rule_tau_f1": 0.5097037793667007,
+    "caught_by_ae_alone_tau_f1": 0.47191011235955055,
+    "caught_by_rule_tau_p99": 0.2512768130745659,
+    "caught_by_ae_alone_tau_p99": 0.20480081716036772
+  }
+}
