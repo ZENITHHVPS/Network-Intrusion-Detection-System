@@ -1,0 +1,2 @@
+Models,Accuracy (%),Recall (%),FAR (%),F1-Score (%),AP (%),ROC-AUC (%),Pred. time (s)
+IF,91.21,76.58,6.05,73.33,64.84,93.99,15.56
