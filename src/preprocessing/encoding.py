@@ -4,6 +4,11 @@ from typing import Tuple, Dict, Optional
 import pandas as pd
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/mem3
 def standardize_labels(df: pd.DataFrame, label_column: str = "Label") -> pd.DataFrame:
     """Fix corrupted dashes (e.g. 'Web Attack � XSS') and normalize whitespace."""
     df = df.copy()
@@ -17,6 +22,11 @@ def standardize_labels(df: pd.DataFrame, label_column: str = "Label") -> pd.Data
     return df.dropna(subset=[label_column])
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/mem3
 def merge_web_attacks(df: pd.DataFrame, label_column: str = "Label") -> pd.DataFrame:
     """Merge Brute Force / XSS / Sql Injection into one 'Web Attack' class (rare-class fix)."""
     df = df.copy()
@@ -25,6 +35,11 @@ def merge_web_attacks(df: pd.DataFrame, label_column: str = "Label") -> pd.DataF
     return df
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/mem3
 def encode_labels(
     y: pd.Series,
     mapping_save_path: Optional[Path] = None
@@ -33,15 +48,27 @@ def encode_labels(
     y = y.astype("string").str.strip()
     unique_classes = sorted(y.unique().tolist())
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/mem3
     if "BENIGN" in unique_classes:
         unique_classes.remove("BENIGN")
         ordered_classes = ["BENIGN"] + unique_classes
     else:
         ordered_classes = unique_classes
 
+<<<<<<< HEAD
     label_to_idx = {label: idx for idx, label in enumerate(ordered_classes)}
     encoded_y = y.map(label_to_idx).astype("int32")
 
+=======
+
+    label_to_idx = {label: idx for idx, label in enumerate(ordered_classes)}
+    encoded_y = y.map(label_to_idx).astype("int32")
+
+
+>>>>>>> origin/mem3
     if mapping_save_path:
         mapping_path = Path(mapping_save_path)
         mapping_path.parent.mkdir(parents=True, exist_ok=True)
@@ -49,4 +76,9 @@ def encode_labels(
             json.dump(label_to_idx, f, indent=4)
         print(f"[Encoding] Saved class mapping ({len(label_to_idx)} classes) to: {mapping_path}")
 
+<<<<<<< HEAD
     return encoded_y, label_to_idx
+=======
+
+    return encoded_y, label_to_idx
+>>>>>>> origin/mem3

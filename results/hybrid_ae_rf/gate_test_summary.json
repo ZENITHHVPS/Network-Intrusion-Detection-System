@@ -1,0 +1,83 @@
+[
+  {
+    "config": "stacked_rf_only",
+    "tau": null,
+    "attack_detection_rate": 0.9987046373981148,
+    "false_positive_rate": 0.0008589332795566411,
+    "missed_attacks": 65,
+    "false_alarms": 230,
+    "portscan_caught": 0.06230847803881512
+  },
+  {
+    "config": "gate_p0.5_fpr0.5pct",
+    "tau": -1.0,
+    "attack_detection_rate": 0.998744494708942,
+    "false_positive_rate": 0.0008589332795566411,
+    "missed_attacks": 63,
+    "false_alarms": 230,
+    "portscan_caught": 0.07660878447395301
+  },
+  {
+    "config": "gate_p0.9_fpr0.5pct",
+    "tau": -1.0,
+    "attack_detection_rate": 0.9996213555471413,
+    "false_positive_rate": 0.0021921471091293403,
+    "missed_attacks": 19,
+    "false_alarms": 587,
+    "portscan_caught": 0.19254341164453523
+  },
+  {
+    "config": "gate_p0.99_fpr0.5pct",
+    "tau": 0.00041250570211559534,
+    "attack_detection_rate": 0.999003567229319,
+    "false_positive_rate": 0.005049033886785125,
+    "missed_attacks": 50,
+    "false_alarms": 1352,
+    "portscan_caught": 0.8534218590398366
+  },
+  {
+    "config": "nogate_fpr0.5pct",
+    "tau": 0.0023410299327224493,
+    "attack_detection_rate": 0.998744494708942,
+    "false_positive_rate": 0.0051162547521417315,
+    "missed_attacks": 63,
+    "false_alarms": 1370,
+    "portscan_caught": 0.20582226762002043
+  },
+  {
+    "config": "gate_p0.5_fpr1.0pct",
+    "tau": -1.0,
+    "attack_detection_rate": 0.998744494708942,
+    "false_positive_rate": 0.0008589332795566411,
+    "missed_attacks": 63,
+    "false_alarms": 230,
+    "portscan_caught": 0.07660878447395301
+  },
+  {
+    "config": "gate_p0.9_fpr1.0pct",
+    "tau": -1.0,
+    "attack_detection_rate": 0.9996213555471413,
+    "false_positive_rate": 0.0021921471091293403,
+    "missed_attacks": 19,
+    "false_alarms": 587,
+    "portscan_caught": 0.19254341164453523
+  },
+  {
+    "config": "gate_p0.99_fpr1.0pct",
+    "tau": 0.00012310405145399272,
+    "attack_detection_rate": 0.9993622830267642,
+    "false_positive_rate": 0.010109271251129684,
+    "missed_attacks": 32,
+    "false_alarms": 2707,
+    "portscan_caught": 0.8733401430030644
+  },
+  {
+    "config": "nogate_fpr1.0pct",
+    "tau": 0.0015858678380027413,
+    "attack_detection_rate": 0.9987644233643556,
+    "false_positive_rate": 0.010337075294838185,
+    "missed_attacks": 62,
+    "false_alarms": 2768,
+    "portscan_caught": 0.23289070480081717
+  }
+]

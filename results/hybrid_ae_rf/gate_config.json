@@ -1,0 +1,50 @@
+[
+  {
+    "name": "gate_p0.5_fpr0.5pct",
+    "budget": 0.005,
+    "p_cut": 0.5,
+    "tau": -1.0
+  },
+  {
+    "name": "gate_p0.9_fpr0.5pct",
+    "budget": 0.005,
+    "p_cut": 0.9,
+    "tau": -1.0
+  },
+  {
+    "name": "gate_p0.99_fpr0.5pct",
+    "budget": 0.005,
+    "p_cut": 0.99,
+    "tau": 0.00041250570211559534
+  },
+  {
+    "name": "nogate_fpr0.5pct",
+    "budget": 0.005,
+    "p_cut": null,
+    "tau": 0.0023410299327224493
+  },
+  {
+    "name": "gate_p0.5_fpr1.0pct",
+    "budget": 0.01,
+    "p_cut": 0.5,
+    "tau": -1.0
+  },
+  {
+    "name": "gate_p0.9_fpr1.0pct",
+    "budget": 0.01,
+    "p_cut": 0.9,
+    "tau": -1.0
+  },
+  {
+    "name": "gate_p0.99_fpr1.0pct",
+    "budget": 0.01,
+    "p_cut": 0.99,
+    "tau": 0.00012310405145399272
+  },
+  {
+    "name": "nogate_fpr1.0pct",
+    "budget": 0.01,
+    "p_cut": null,
+    "tau": 0.0015858678380027413
+  }
+]

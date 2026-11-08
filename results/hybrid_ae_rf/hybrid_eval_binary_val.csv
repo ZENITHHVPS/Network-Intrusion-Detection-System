@@ -1,0 +1,12 @@
+,Hybrid (stacked RF only),Hybrid + plain rule (0.5% FPR budget),Hybrid + gate p<0.99 (0.5% FPR budget),Hybrid + plain rule (1.0% FPR budget),Hybrid + gate p<0.99 (1.0% FPR budget)
+Accuracy (%),99.91,99.56,99.56,99.14,99.15
+Precision (%),99.57,97.38,97.38,94.90,94.90
+Recall / detection rate (%),99.88,99.88,99.90,99.88,99.94
+F1-score (%),99.73,98.62,98.62,97.33,97.35
+"False alarm rate, FAR = FPR (%)",0.0794,0.4998,0.4998,0.9996,0.9996
+True negative rate (%),99.9206,99.5002,99.5002,99.0004,99.0004
+"Average precision, AP (%)",99.99,99.93,99.98,99.93,99.98
+ROC-AUC (%),100.00,99.96,99.99,99.96,99.99
+Held-out PortScan recall (%),6.23,20.58,85.34,23.29,87.33
+Held-out PortScan ROC-AUC (%),97.98,96.42,93.36,96.42,93.36
+Prediction Time(s),7.29,7.29,7.29,7.29,7.29

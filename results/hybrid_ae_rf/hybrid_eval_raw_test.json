@@ -1,0 +1,142 @@
+{
+  "Hybrid (stacked RF only)": {
+    "multiclass": {
+      "Accuracy (%)": 99.90187228930061,
+      "Macro_Precision (%)": 96.26374101499503,
+      "Macro_Recall (%)": 98.86434575262078,
+      "Macro_F1 (%)": 97.3040779512001,
+      "Weighted F1 (%)": 99.90630362494207,
+      "FPR (%)": 0.08589332795566411,
+      "Attack Detection Rate (%)": 99.87046373981147,
+      "MCC (%)": 99.65074525944796,
+      "Missed Attacks / False Alarms": "65 / 230",
+      "Inference Latency (us)": 20.864727805262795
+    },
+    "binary": {
+      "Accuracy (%)": 99.90721899148616,
+      "Precision (%)": 99.5431431749563,
+      "Recall / detection rate (%)": 99.87046373981147,
+      "F1-score (%)": 99.70653482287635,
+      "False alarm rate, FAR = FPR (%)": 0.08589332795566411,
+      "True negative rate (%)": 99.91410667204434,
+      "Average precision, AP (%)": 99.98645544253493,
+      "ROC-AUC (%)": 99.99688776164943,
+      "Held-out PortScan recall (%)": 6.230847803881511,
+      "Held-out PortScan ROC-AUC (%)": 97.93440984524224,
+      "Prediction Time(s)": 6.634002799866721
+    }
+  },
+  "Hybrid + plain rule (0.5% FPR budget)": {
+    "multiclass": {
+      "Accuracy (%)": 99.54395775476249,
+      "Macro_Precision (%)": 76.99545239303117,
+      "Macro_Recall (%)": 98.8464427546646,
+      "Macro_F1 (%)": 82.61104358018692,
+      "Weighted F1 (%)": 99.58122316176306,
+      "FPR (%)": 0.5116254752141731,
+      "Attack Detection Rate (%)": 99.8744494708942,
+      "MCC (%)": 98.40292254041807,
+      "Missed Attacks / False Alarms": "63 / 1,370",
+      "Inference Latency (us)": 20.89164530593892
+    },
+    "binary": {
+      "Accuracy (%)": 99.54930445694804,
+      "Precision (%)": 97.33908246902071,
+      "Recall / detection rate (%)": 99.8744494708942,
+      "F1-score (%)": 98.59046869620813,
+      "False alarm rate, FAR = FPR (%)": 0.5116254752141731,
+      "True negative rate (%)": 99.48837452478583,
+      "Average precision, AP (%)": 99.92707934695439,
+      "ROC-AUC (%)": 99.95877031768688,
+      "Held-out PortScan recall (%)": 20.582226762002044,
+      "Held-out PortScan ROC-AUC (%)": 96.34021544993048,
+      "Prediction Time(s)": 6.642561299959198
+    }
+  },
+  "Hybrid + gate p<0.99 (0.5% FPR budget)": {
+    "multiclass": {
+      "Accuracy (%)": 99.55307859966724,
+      "Macro_Precision (%)": 77.19809622016805,
+      "Macro_Recall (%)": 99.10255824667937,
+      "Macro_F1 (%)": 83.41669493029362,
+      "Weighted F1 (%)": 99.57819175393196,
+      "FPR (%)": 0.5049033886785125,
+      "Attack Detection Rate (%)": 99.9003567229319,
+      "MCC (%)": 98.43481615856045,
+      "Missed Attacks / False Alarms": "50 / 1,352",
+      "Inference Latency (us)": 20.889356288524734
+    },
+    "binary": {
+      "Accuracy (%)": 99.55905432563932,
+      "Precision (%)": 97.37378838794896,
+      "Recall / detection rate (%)": 99.9003567229319,
+      "F1-score (%)": 98.62089317332284,
+      "False alarm rate, FAR = FPR (%)": 0.5049033886785125,
+      "True negative rate (%)": 99.49509661132149,
+      "Average precision, AP (%)": 99.97477399305768,
+      "ROC-AUC (%)": 99.99068913220015,
+      "Held-out PortScan recall (%)": 85.34218590398366,
+      "Held-out PortScan ROC-AUC (%)": 93.35290237930506,
+      "Prediction Time(s)": 6.641833500005305
+    }
+  },
+  "Hybrid + plain rule (1.0% FPR budget)": {
+    "multiclass": {
+      "Accuracy (%)": 99.10458463986815,
+      "Macro_Precision (%)": 67.92700826452032,
+      "Macro_Recall (%)": 98.82889645678804,
+      "Macro_F1 (%)": 75.4003115194768,
+      "Weighted F1 (%)": 99.19660605280308,
+      "FPR (%)": 1.0337075294838185,
+      "Attack Detection Rate (%)": 99.87644233643556,
+      "MCC (%)": 96.92580924665025,
+      "Missed Attacks / False Alarms": "62 / 2,768",
+      "Inference Latency (us)": 20.886866297578862
+    },
+    "binary": {
+      "Accuracy (%)": 99.1099313420537,
+      "Precision (%)": 94.7660017018058,
+      "Recall / detection rate (%)": 99.87644233643556,
+      "F1-score (%)": 97.25413335403243,
+      "False alarm rate, FAR = FPR (%)": 1.0337075294838185,
+      "True negative rate (%)": 98.96629247051618,
+      "Average precision, AP (%)": 99.92707934695439,
+      "ROC-AUC (%)": 99.95877031768688,
+      "Held-out PortScan recall (%)": 23.289070480081715,
+      "Held-out PortScan ROC-AUC (%)": 96.34021544993048,
+      "Prediction Time(s)": 6.641041799914092
+    }
+  },
+  "Hybrid + gate p<0.99 (1.0% FPR budget)": {
+    "multiclass": {
+      "Accuracy (%)": 99.13163266268914,
+      "Macro_Precision (%)": 70.28062695660351,
+      "Macro_Recall (%)": 99.26656506106542,
+      "Macro_F1 (%)": 78.11304988020147,
+      "Weighted F1 (%)": 99.21558305045193,
+      "FPR (%)": 1.0109271251129683,
+      "Attack Detection Rate (%)": 99.93622830267643,
+      "MCC (%)": 97.01784250046941,
+      "Missed Attacks / False Alarms": "32 / 2,707",
+      "Inference Latency (us)": 20.887204397143325
+    },
+    "binary": {
+      "Accuracy (%)": 99.13855192434102,
+      "Precision (%)": 94.87834411775835,
+      "Recall / detection rate (%)": 99.93622830267643,
+      "F1-score (%)": 97.34162841031514,
+      "False alarm rate, FAR = FPR (%)": 1.0109271251129683,
+      "True negative rate (%)": 98.98907287488703,
+      "Average precision, AP (%)": 99.97477399305768,
+      "ROC-AUC (%)": 99.99068913220015,
+      "Held-out PortScan recall (%)": 87.33401430030644,
+      "Held-out PortScan ROC-AUC (%)": 93.35290237930506,
+      "Prediction Time(s)": 6.641149299684912
+    }
+  },
+  "_timing_seconds": {
+    "ae_pass": 1.2482175999321043,
+    "rf_predict_proba": 5.3824074999429286,
+    "n_rows": 317953
+  }
+}
