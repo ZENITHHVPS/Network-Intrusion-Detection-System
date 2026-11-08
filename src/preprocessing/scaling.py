@@ -7,16 +7,31 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/mem3
 def get_feature_columns(df: pd.DataFrame, label_col: str) -> List[str]:
     """Retrieve all numeric feature columns excluding the target."""
     return [c for c in df.select_dtypes(include=[np.number]).columns.tolist() if c != label_col]
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/mem3
 def get_log_columns(X_train: pd.DataFrame) -> List[str]:
     """Columns safe for log1p: non-negative in train (skips e.g. Init_Win_bytes_* which contain -1)."""
     return [c for c in X_train.columns if X_train[c].min() >= 0]
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/mem3
 def apply_log1p(X: pd.DataFrame, log_cols: List[str]) -> pd.DataFrame:
     """log1p on heavy-tailed columns. Lower-clips at 0 so unseen negatives can't produce NaN."""
     X = X.copy()
@@ -24,6 +39,11 @@ def apply_log1p(X: pd.DataFrame, log_cols: List[str]) -> pd.DataFrame:
     return X
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/mem3
 def _transform(scaler: MinMaxScaler, X: pd.DataFrame, clip: bool) -> pd.DataFrame:
     arr = scaler.transform(X)
     if clip:
@@ -31,6 +51,11 @@ def _transform(scaler: MinMaxScaler, X: pd.DataFrame, clip: bool) -> pd.DataFram
     return pd.DataFrame(arr.astype("float32"), columns=X.columns, index=X.index)
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/mem3
 def fit_and_scale_splits(
     X_train: pd.DataFrame,
     X_val: pd.DataFrame,
@@ -43,18 +68,33 @@ def fit_and_scale_splits(
     scaler = MinMaxScaler(feature_range=(0, 1))
     scaler.fit(X_train)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/mem3
     X_train_scaled = _transform(scaler, X_train, clip)
     X_val_scaled = _transform(scaler, X_val, clip)
     X_test_scaled = _transform(scaler, X_test, clip)
 
+<<<<<<< HEAD
     feature_cols = X_train.columns.tolist()
 
+=======
+
+    feature_cols = X_train.columns.tolist()
+
+
+>>>>>>> origin/mem3
     if scaler_save_path:
         scaler_save_path = Path(scaler_save_path)
         scaler_save_path.parent.mkdir(parents=True, exist_ok=True)
         joblib.dump(scaler, scaler_save_path)
         print(f"[Scaling] Scaler saved to: {scaler_save_path}")
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/mem3
     if features_save_path:
         features_save_path = Path(features_save_path)
         features_save_path.parent.mkdir(parents=True, exist_ok=True)
@@ -62,9 +102,18 @@ def fit_and_scale_splits(
             json.dump(feature_cols, f, indent=4)
         print(f"[Scaling] Feature list ({len(feature_cols)} features) saved to: {features_save_path}")
 
+<<<<<<< HEAD
     return X_train_scaled, X_val_scaled, X_test_scaled, scaler
 
 
+=======
+
+    return X_train_scaled, X_val_scaled, X_test_scaled, scaler
+
+
+
+
+>>>>>>> origin/mem3
 def scale_external_data(
     X_df: pd.DataFrame,
     scaler: MinMaxScaler,
@@ -72,4 +121,8 @@ def scale_external_data(
     clip: bool = True,
 ) -> pd.DataFrame:
     """Transforms unseen evaluation subsets (e.g., held-out attack) using the fitted scaler."""
+<<<<<<< HEAD
     return _transform(scaler, X_df[feature_cols], clip)
+=======
+    return _transform(scaler, X_df[feature_cols], clip)
+>>>>>>> origin/mem3

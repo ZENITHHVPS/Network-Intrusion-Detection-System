@@ -1,0 +1,13 @@
+{
+  "split": "test",
+  "accuracy": 0.9990187228930062,
+  "macro_precision": 0.9626374101499503,
+  "macro_recall": 0.9886434575262077,
+  "macro_f1": 0.973040779512001,
+  "weighted_f1": 0.9990630362494207,
+  "false_positive_rate": 0.0008589332795566411,
+  "attack_detection_rate": 0.9987046373981148,
+  "inference_seconds": 5.958351099980064,
+  "inference_us_per_flow": 18.73972285205695,
+  "n_rows": 317953
+}

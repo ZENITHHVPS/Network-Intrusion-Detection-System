@@ -1,0 +1,521 @@
+{
+    "meta": {
+        "timestamp_utc": "2026-10-31T15:44:10+00:00",
+        "git_hash": "fa0550c7dee3084b38499071d5a2af81a8009317",
+        "args": {
+            "log1p": true,
+            "quick": false,
+            "fresh": false,
+            "seeds": 5,
+            "bootstrap": 200
+        },
+        "seed": 42,
+        "python": "3.13.14",
+        "sklearn": "1.9.1",
+        "numpy": "2.5.4",
+        "pandas": "3.0.6",
+        "data_dir": "C:\\Desktop\\IDSE_NIDS\\Network-Intrusion-Detection-System\\data\\processed\\log1p",
+        "n_features": 68,
+        "feature_names": [
+            "Flow Duration",
+            "Total Fwd Packets",
+            "Total Backward Packets",
+            "Total Length of Fwd Packets",
+            "Total Length of Bwd Packets",
+            "Fwd Packet Length Max",
+            "Fwd Packet Length Min",
+            "Fwd Packet Length Mean",
+            "Fwd Packet Length Std",
+            "Bwd Packet Length Max",
+            "Bwd Packet Length Min",
+            "Bwd Packet Length Mean",
+            "Bwd Packet Length Std",
+            "Flow Bytes/s",
+            "Flow Packets/s",
+            "Flow IAT Mean",
+            "Flow IAT Std",
+            "Flow IAT Max",
+            "Flow IAT Min",
+            "Fwd IAT Total",
+            "Fwd IAT Mean",
+            "Fwd IAT Std",
+            "Fwd IAT Max",
+            "Fwd IAT Min",
+            "Bwd IAT Total",
+            "Bwd IAT Mean",
+            "Bwd IAT Std",
+            "Bwd IAT Max",
+            "Bwd IAT Min",
+            "Fwd PSH Flags",
+            "Fwd URG Flags",
+            "Fwd Header Length",
+            "Bwd Header Length",
+            "Fwd Packets/s",
+            "Bwd Packets/s",
+            "Min Packet Length",
+            "Max Packet Length",
+            "Packet Length Mean",
+            "Packet Length Std",
+            "Packet Length Variance",
+            "FIN Flag Count",
+            "SYN Flag Count",
+            "RST Flag Count",
+            "PSH Flag Count",
+            "ACK Flag Count",
+            "URG Flag Count",
+            "CWE Flag Count",
+            "ECE Flag Count",
+            "Down/Up Ratio",
+            "Average Packet Size",
+            "Avg Fwd Segment Size",
+            "Avg Bwd Segment Size",
+            "Subflow Fwd Packets",
+            "Subflow Fwd Bytes",
+            "Subflow Bwd Packets",
+            "Subflow Bwd Bytes",
+            "Init_Win_bytes_forward",
+            "Init_Win_bytes_backward",
+            "act_data_pkt_fwd",
+            "min_seg_size_forward",
+            "Active Mean",
+            "Active Std",
+            "Active Max",
+            "Active Min",
+            "Idle Mean",
+            "Idle Std",
+            "Idle Max",
+            "Idle Min"
+        ],
+        "rows": {
+            "train": 1304306,
+            "val": 319674,
+            "test": 317953,
+            "portscan": 1958
+        },
+        "attack_prevalence": {
+            "val": 0.15696928746160152,
+            "test": 0.15781892292257033
+        },
+        "model_selection": "semi-supervised: params/thresholds chosen on validation using attack labels; model trained on benign data only"
+    },
+    "sanity_checks": {
+        "train": {
+            "rows": 1304306,
+            "nan_cells": 0,
+            "inf_cells": 0,
+            "duplicate_column_names": 0
+        },
+        "val": {
+            "rows": 319674,
+            "nan_cells": 0,
+            "inf_cells": 0,
+            "duplicate_column_names": 0
+        },
+        "test": {
+            "rows": 317953,
+            "nan_cells": 0,
+            "inf_cells": 0,
+            "duplicate_column_names": 0
+        },
+        "portscan": {
+            "rows": 1958,
+            "nan_cells": 0,
+            "inf_cells": 0,
+            "duplicate_column_names": 0
+        },
+        "identical_columns": [
+            "SYN Flag Count",
+            "CWE Flag Count",
+            "ECE Flag Count",
+            "Avg Fwd Segment Size",
+            "Avg Bwd Segment Size",
+            "Subflow Fwd Packets",
+            "Subflow Bwd Packets"
+        ],
+        "train_internal_duplicate_frac": 0.018837604059170163,
+        "exact_row_overlap": {
+            "val": 0.0001595375288575236,
+            "test": 0.00018870713596034634,
+            "portscan": 0.03779366700715015,
+            "test_in_val": 6.290237865344878e-05,
+            "portscan_in_test": 0.008171603677221655
+        }
+    },
+    "tuning": {
+        "val_pr_auc_by_config": {
+            "300|1024|0.5": 0.604093596784633,
+            "300|1024|1.0": 0.5893689037117564,
+            "100|1024|1.0": 0.5822168772490689,
+            "200|1024|1.0": 0.5808465182645896,
+            "100|1024|0.5": 0.5775497735817712,
+            "200|1024|0.5": 0.5738205141425826,
+            "100|512|1.0": 0.5465771689131359,
+            "300|512|1.0": 0.5434040032225198,
+            "200|512|1.0": 0.5401525919164584,
+            "300|512|0.5": 0.5221628281006867,
+            "300|256|0.5": 0.5103103792346689,
+            "200|512|0.5": 0.5078468037264521,
+            "200|256|0.5": 0.49365134218225076,
+            "100|512|0.5": 0.49138008739049877,
+            "300|256|1.0": 0.48418690597620045,
+            "200|256|1.0": 0.4831642297398772,
+            "100|256|0.5": 0.4804481851477733,
+            "100|256|1.0": 0.4715985957136112
+        }
+    },
+    "params": {
+        "n_estimators": 300,
+        "max_samples": 1024,
+        "max_features": 0.5
+    },
+    "thresholds": {
+        "best_f1": 0.5144892362943718,
+        "p95": 0.5429822562078729,
+        "p99": 0.5981612929128813
+    },
+    "test": {
+        "best_f1": {
+            "roc_auc": 0.9279228299753216,
+            "pr_auc": 0.597599124351735,
+            "precision": 0.619806786275163,
+            "recall": 0.7786524243209311,
+            "f1": 0.6902082707696656,
+            "false_positive_rate": 0.08950458222232181,
+            "tn": 243807,
+            "fp": 23967,
+            "fn": 11107,
+            "tp": 39072
+        },
+        "p95": {
+            "roc_auc": 0.9279228299753216,
+            "pr_auc": 0.597599124351735,
+            "precision": 0.6603027982908938,
+            "recall": 0.5327926024831104,
+            "f1": 0.589733974500375,
+            "false_positive_rate": 0.05136421011748713,
+            "tn": 254020,
+            "fp": 13754,
+            "fn": 23444,
+            "tp": 26735
+        },
+        "p99": {
+            "roc_auc": 0.9279228299753216,
+            "pr_auc": 0.597599124351735,
+            "precision": 0.34710941232680365,
+            "recall": 0.02895633631598876,
+            "f1": 0.053453508691253565,
+            "false_positive_rate": 0.010206368056644783,
+            "tn": 265041,
+            "fp": 2733,
+            "fn": 48726,
+            "tp": 1453
+        }
+    },
+    "portscan_zero_day": {
+        "n_portscan": 1958,
+        "n_benign": 267774,
+        "prevalence": 0.007259057138196432,
+        "roc_auc": 0.8821080667456884,
+        "pr_auc": 0.0316704202574182,
+        "pr_auc_random_baseline": 0.007259057138196432,
+        "recall@best_f1": 0.20888661899897856,
+        "recall@p95": 0.15474974463738508,
+        "recall@p99": 0.09039836567926456,
+        "prevalence_matched_to_test": {
+            "pr_auc_mean": 0.4401015040260458,
+            "pr_auc_std": 0.005031247817685169,
+            "n_portscan": 1958,
+            "n_benign": 10449,
+            "prevalence": 0.15781413718062384
+        }
+    },
+    "test_bootstrap_ci95": {
+        "roc_auc": [
+            0.9268971906193699,
+            0.9287839774361184
+        ],
+        "pr_auc": [
+            0.593089321243496,
+            0.6011492471225467
+        ],
+        "precision@best_f1": [
+            0.6167933370770401,
+            0.6222903620738649
+        ],
+        "recall@best_f1": [
+            0.774604914406425,
+            0.7818454931345783
+        ],
+        "f1@best_f1": [
+            0.6878061933339198,
+            0.692699479480311
+        ],
+        "false_positive_rate@best_f1": [
+            0.08878503887606713,
+            0.09063370603568682
+        ],
+        "precision@p95": [
+            0.6564855941103952,
+            0.6633939517419265
+        ],
+        "recall@p95": [
+            0.5281532115028199,
+            0.5365446700811096
+        ],
+        "f1@p95": [
+            0.5862161810770669,
+            0.5925578380630911
+        ],
+        "false_positive_rate@p95": [
+            0.05082569629613032,
+            0.05218271751551682
+        ],
+        "precision@p99": [
+            0.3311212682764116,
+            0.36194273617474
+        ],
+        "recall@p99": [
+            0.027500049821638534,
+            0.03027262400605831
+        ],
+        "f1@p99": [
+            0.050860646644007114,
+            0.05582154204974265
+        ],
+        "false_positive_rate@p99": [
+            0.009840107702764271,
+            0.010628459073696476
+        ]
+    },
+    "seed_robustness": {
+        "seeds": [
+            42,
+            43,
+            44,
+            45,
+            46
+        ],
+        "per_seed": [
+            {
+                "seed": 42,
+                "val_pr_auc": 0.604093596784633,
+                "best_f1": {
+                    "roc_auc": 0.9279228299753216,
+                    "pr_auc": 0.597599124351735,
+                    "precision": 0.619806786275163,
+                    "recall": 0.7786524243209311,
+                    "f1": 0.6902082707696656,
+                    "false_positive_rate": 0.08950458222232181
+                },
+                "p95": {
+                    "roc_auc": 0.9279228299753216,
+                    "pr_auc": 0.597599124351735,
+                    "precision": 0.6603027982908938,
+                    "recall": 0.5327926024831104,
+                    "f1": 0.589733974500375,
+                    "false_positive_rate": 0.05136421011748713
+                },
+                "p99": {
+                    "roc_auc": 0.9279228299753216,
+                    "pr_auc": 0.597599124351735,
+                    "precision": 0.34710941232680365,
+                    "recall": 0.02895633631598876,
+                    "f1": 0.053453508691253565,
+                    "false_positive_rate": 0.010206368056644783
+                }
+            },
+            {
+                "seed": 43,
+                "val_pr_auc": 0.5654642529913703,
+                "best_f1": {
+                    "roc_auc": 0.9234060450361627,
+                    "pr_auc": 0.5585285647975377,
+                    "precision": 0.6102696152681005,
+                    "recall": 0.8029255266147193,
+                    "f1": 0.693465520357318,
+                    "false_positive_rate": 0.09608849253474945
+                },
+                "p95": {
+                    "roc_auc": 0.9234060450361627,
+                    "pr_auc": 0.5585285647975377,
+                    "precision": 0.668429529555999,
+                    "recall": 0.5541361924310967,
+                    "f1": 0.6059404214517641,
+                    "false_positive_rate": 0.05150985532575978
+                },
+                "p99": {
+                    "roc_auc": 0.9234060450361627,
+                    "pr_auc": 0.5585285647975377,
+                    "precision": 0.27614950255445014,
+                    "recall": 0.020466729109786964,
+                    "f1": 0.038109020742884706,
+                    "false_positive_rate": 0.010053253863332511
+                }
+            },
+            {
+                "seed": 44,
+                "val_pr_auc": 0.592175623629313,
+                "best_f1": {
+                    "roc_auc": 0.9256492434074817,
+                    "pr_auc": 0.5859386938926855,
+                    "precision": 0.6384174177689337,
+                    "recall": 0.7608362063811555,
+                    "f1": 0.6942716857610475,
+                    "false_positive_rate": 0.08075093175588369
+                },
+                "p95": {
+                    "roc_auc": 0.9256492434074817,
+                    "pr_auc": 0.5859386938926855,
+                    "precision": 0.671724401183319,
+                    "recall": 0.5611112218258634,
+                    "f1": 0.6114555621912156,
+                    "false_positive_rate": 0.05138661707260601
+                },
+                "p99": {
+                    "roc_auc": 0.9256492434074817,
+                    "pr_auc": 0.5859386938926855,
+                    "precision": 0.3231571109456441,
+                    "recall": 0.025947109348532255,
+                    "f1": 0.04803719008264463,
+                    "false_positive_rate": 0.010183961101525914
+                }
+            },
+            {
+                "seed": 45,
+                "val_pr_auc": 0.5725025881244886,
+                "best_f1": {
+                    "roc_auc": 0.9237327676217282,
+                    "pr_auc": 0.5654029830076456,
+                    "precision": 0.6236716923325002,
+                    "recall": 0.7707806054325514,
+                    "f1": 0.6894664598819902,
+                    "false_positive_rate": 0.08715558642736039
+                },
+                "p95": {
+                    "roc_auc": 0.9237327676217282,
+                    "pr_auc": 0.5654029830076456,
+                    "precision": 0.6759559757302103,
+                    "recall": 0.5728093425536579,
+                    "f1": 0.6201227602722732,
+                    "false_positive_rate": 0.05145757243048242
+                },
+                "p99": {
+                    "roc_auc": 0.9237327676217282,
+                    "pr_auc": 0.5654029830076456,
+                    "precision": 0.274329086473299,
+                    "recall": 0.020167799278582674,
+                    "f1": 0.03757332739288632,
+                    "false_positive_rate": 0.00999723647553534
+                }
+            },
+            {
+                "seed": 46,
+                "val_pr_auc": 0.5933454590820917,
+                "best_f1": {
+                    "roc_auc": 0.9254152941107968,
+                    "pr_auc": 0.5872371963677961,
+                    "precision": 0.6292951685466519,
+                    "recall": 0.7693656708981845,
+                    "f1": 0.6923166587463125,
+                    "false_positive_rate": 0.08492982888555274
+                },
+                "p95": {
+                    "roc_auc": 0.9254152941107968,
+                    "pr_auc": 0.5872371963677961,
+                    "precision": 0.6634943043520592,
+                    "recall": 0.543235217919847,
+                    "f1": 0.5973724291333837,
+                    "false_positive_rate": 0.05162935908639375
+                },
+                "p99": {
+                    "roc_auc": 0.9254152941107968,
+                    "pr_auc": 0.5872371963677961,
+                    "precision": 0.29558441558441556,
+                    "recall": 0.022678809860698698,
+                    "f1": 0.04212552518092136,
+                    "false_positive_rate": 0.010127943713728741
+                }
+            }
+        ],
+        "summary": {
+            "best_f1": {
+                "roc_auc": {
+                    "mean": 0.9252252360302983,
+                    "std": 0.0018048431542532185
+                },
+                "pr_auc": {
+                    "mean": 0.57894131248348,
+                    "std": 0.016323798675594327
+                },
+                "precision": {
+                    "mean": 0.6242921360382698,
+                    "std": 0.010508191089452733
+                },
+                "recall": {
+                    "mean": 0.7765120867295084,
+                    "std": 0.016061640742482907
+                },
+                "f1": {
+                    "mean": 0.6919457191032667,
+                    "std": 0.0020629448588077074
+                },
+                "false_positive_rate": {
+                    "mean": 0.08768588436517362,
+                    "std": 0.005698291659561495
+                }
+            },
+            "p95": {
+                "roc_auc": {
+                    "mean": 0.9252252360302983,
+                    "std": 0.0018048431542532185
+                },
+                "pr_auc": {
+                    "mean": 0.57894131248348,
+                    "std": 0.016323798675594327
+                },
+                "precision": {
+                    "mean": 0.6679814018224963,
+                    "std": 0.006262980272900976
+                },
+                "recall": {
+                    "mean": 0.552816915442715,
+                    "std": 0.015516243012242817
+                },
+                "f1": {
+                    "mean": 0.6049250295098023,
+                    "std": 0.011858117715015794
+                },
+                "false_positive_rate": {
+                    "mean": 0.05146952280654582,
+                    "std": 0.00010639699613558052
+                }
+            },
+            "p99": {
+                "roc_auc": {
+                    "mean": 0.9252252360302983,
+                    "std": 0.0018048431542532185
+                },
+                "pr_auc": {
+                    "mean": 0.57894131248348,
+                    "std": 0.016323798675594327
+                },
+                "precision": {
+                    "mean": 0.3032659055769225,
+                    "std": 0.0314227514564109
+                },
+                "recall": {
+                    "mean": 0.02364335678271787,
+                    "std": 0.003762839403535888
+                },
+                "f1": {
+                    "mean": 0.04385971441811812,
+                    "std": 0.0068023661943977095
+                },
+                "false_positive_rate": {
+                    "mean": 0.010113752642153459,
+                    "std": 8.795502913920772e-05
+                }
+            }
+        }
+    }
+}

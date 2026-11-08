@@ -1,0 +1,11 @@
+,Hybrid (stacked RF only),Hybrid + plain rule (0.5% FPR budget),Hybrid + gate p<0.99 (0.5% FPR budget),Hybrid + plain rule (1.0% FPR budget),Hybrid + gate p<0.99 (1.0% FPR budget)
+Accuracy (%),99.90,99.54,99.55,99.10,99.13
+Macro_Precision (%),96.26,77.00,77.20,67.93,70.28
+Macro_Recall (%),98.86,98.85,99.10,98.83,99.27
+Macro_F1 (%),97.30,82.61,83.42,75.40,78.11
+Weighted F1 (%),99.91,99.58,99.58,99.20,99.22
+FPR (%),0.0859,0.5116,0.5049,1.0337,1.0109
+Attack Detection Rate (%),99.87,99.87,99.90,99.88,99.94
+MCC (%),99.65,98.40,98.43,96.93,97.02
+Missed Attacks / False Alarms,65 / 230,"63 / 1,370","50 / 1,352","62 / 2,768","32 / 2,707"
+Inference Latency (us),20.86,20.89,20.89,20.89,20.89

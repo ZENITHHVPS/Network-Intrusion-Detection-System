@@ -1,0 +1,10 @@
+Metric,Evaluated On,Value,Note
+ROC-AUC,X_test_anomaly,0.8885,
+PR-AUC,X_test_anomaly,0.6808,
+Anomaly F1-Score,X_test_anomaly,0.7203,threshold=best_f1
+Precision,X_test_anomaly,0.7153,
+Recall (Detection Rate),X_test_anomaly,0.7254,
+False Positive Rate (FPR),X_test_anomaly,0.0541 (5.41%),ABOVE 5% target
+Held-Out PortScan Recall,X_heldout_portscan,0.1001 (10.01%),"1,958 flows"
+Inference Latency,test batches of 1000,29.6 us/flow,29.6 ms per 1000-flow batch
+Training Time,X_train_anomaly_benign,3.1 s,"refit, 1,304,306 flows"
