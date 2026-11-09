@@ -1,4 +1,5 @@
-data/
+results/eda/*
+data/*
 .venv
 .venv-1
 __pycache__/
