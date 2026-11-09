@@ -1,0 +1,27 @@
+{
+  "split": "test",
+  "n_rows": 317953,
+  "accuracy": 0.9983110711331549,
+  "macro_precision": 0.9654801652225605,
+  "macro_recall": 0.9016446735763374,
+  "macro_f1": 0.9208642849041215,
+  "macro_f1_excl_small_classes": 0.9478942847420889,
+  "small_classes_excluded": [
+    "Heartbleed",
+    "Infiltration"
+  ],
+  "weighted_f1": 0.9982933572569866,
+  "mcc": 0.9939780559901424,
+  "macro_roc_auc_ovr": 0.946310121184965,
+  "attack_detection_rate": 0.9951174794236632,
+  "false_positive_rate": 0.0010008439953094774,
+  "attack_type_accuracy": 0.9995193655625425,
+  "false_alarms": 268,
+  "missed_attacks": 245,
+  "inference_seconds": 0.31606809998629615,
+  "inference_us_per_flow": 0.9940717652807055,
+  "throughput_flows_per_s": 1005963.5882703302,
+  "model_size_mb": 1.612981,
+  "train_seconds": 190.64098080000258,
+  "model": "baseline"
+}
