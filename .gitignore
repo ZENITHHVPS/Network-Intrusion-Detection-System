@@ -1,8 +1,6 @@
-data/raw/*.csv
-data/raw/*.zip
-data/processed/*.csv
-data/processed/*.parquet
 data/*
 results/eda
+__pycache__/
+*pyc
 .venv
 .venv-1
