@@ -1,0 +1,21 @@
+{
+  "split": "val",
+  "accuracy": 0.9991616459267879,
+  "macro_precision": 0.965659271371193,
+  "macro_recall": 0.9928089187781274,
+  "macro_f1": 0.977051825046543,
+  "weighted_f1": 0.9991943222336437,
+  "false_positive_rate": 0.00076068201636394,
+  "attack_detection_rate": 0.9991032105063872,
+  "inference_seconds": 9.755916399881244,
+  "inference_us_per_flow": 30.51832929760082,
+  "n_rows": 319674,
+  "train_seconds": 1964.3788976001088,
+  "n_estimators": 500,
+  "weighting": "sqrt",
+  "max_depth": 20,
+  "min_samples_split": 2,
+  "min_samples_leaf": 1,
+  "max_features": 0.5,
+  "max_samples": null
+}

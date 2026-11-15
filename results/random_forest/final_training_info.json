@@ -1,0 +1,17 @@
+{
+  "algorithm": "RandomForestClassifier",
+  "training_rows": 1538478,
+  "features": 68,
+  "classes": 12,
+  "n_estimators": 500,
+  "training_seconds": 1964.3788976001088,
+  "training_minutes": 32.739648293335144,
+  "weighting": "sqrt",
+  "parameters": {
+    "max_depth": 20,
+    "min_samples_split": 2,
+    "min_samples_leaf": 1,
+    "max_features": 0.5,
+    "max_samples": null
+  }
+}

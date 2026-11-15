@@ -3,3 +3,9 @@ data/raw/*.zip
 data/processed/*.csv
 .venv
 .venv-1
+
+data/processed/*.parquet
+data/processed/log1p/*
+src/models/*
+src/_pycache_/*
+results/eda/*

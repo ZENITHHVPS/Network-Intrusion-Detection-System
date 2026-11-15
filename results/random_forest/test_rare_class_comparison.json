@@ -1,0 +1,8 @@
+{
+  "macro_f1_all_classes": 0.9211194288793164,
+  "macro_f1_excluding_heartbleed_infiltration": 0.916454612417097,
+  "excluded_label_ids": [
+    "8",
+    "9"
+  ]
+}
