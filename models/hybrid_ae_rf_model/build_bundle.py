@@ -19,9 +19,9 @@ import numpy as np
 import sklearn
 import tensorflow as tf
 
-from confidence_gate import apply_rule
-from hybrid_predict import build_fused, predict
-from train_hybrid_ae_rf import (AE_PATH, MOD, RES, fuse, load_feature_model, load_names,
+from models.hybrid_ae_rf_model.confidence_gate import apply_rule
+from models.hybrid_ae_rf_model.hybrid_predict import build_fused, predict
+from models.hybrid_ae_rf_model.train_hybrid_ae_rf import (AE_PATH, MOD, RES, fuse, load_feature_model, load_names,
                                 load_split, log)
 
 OUT = MOD / "hybrid_nids_bundle.joblib"

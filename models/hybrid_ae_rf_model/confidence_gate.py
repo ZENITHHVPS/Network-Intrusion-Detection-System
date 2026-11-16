@@ -24,7 +24,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
-from train_hybrid_ae_rf import (DATA, MOD, RES, binary_metrics, fuse, load_feature_model,
+from models.hybrid_ae_rf_model.train_hybrid_ae_rf import (DATA, MOD, RES, binary_metrics, fuse, load_feature_model,
                                 load_split, log, save_json)
 
 # Fixed in advance. Do NOT add or change values after looking at test / PortScan results.

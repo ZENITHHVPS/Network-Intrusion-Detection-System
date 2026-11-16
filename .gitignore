@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 data/raw/*.csv
 data/raw/*.zip
 main.py
@@ -16,10 +15,3 @@ data/processed/*.joblib
 # Python bytecode
 __pycache__/
 *.pyc
-=======
-data/
-.venv
-.venv-1
-__pycache__/
-*.pyc
->>>>>>> origin/mem3

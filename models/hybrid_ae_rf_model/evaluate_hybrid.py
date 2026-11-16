@@ -29,8 +29,8 @@ from sklearn.metrics import (accuracy_score, average_precision_score, f1_score,
                              matthews_corrcoef, precision_score, recall_score,
                              roc_auc_score)
 
-from confidence_gate import CONFIG_FILE, apply_rule
-from train_hybrid_ae_rf import (DATA, MOD, RES, fuse, load_feature_model, load_names,
+from models.hybrid_ae_rf_model.confidence_gate import CONFIG_FILE, apply_rule
+from models.hybrid_ae_rf_model.train_hybrid_ae_rf import (DATA, MOD, RES, fuse, load_feature_model, load_names,
                                 load_split, log, save_json)
 
 # Columns of the tables (names from gate_config.json). Override with --configs.
