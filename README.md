@@ -12,14 +12,6 @@ Full details are in the project report.
 - Architecture: 68 → 64 → 32 → 16 (latent) → 32 → 64 → 68
 - Training: Adam, batch size 512, up to 50 epochs; τ set by best F1 on validation
 
-## How to run
-
-```bash
-pip install -r requirements.txt
-python data_pipeline.py
-python TODO_train_autoencoder.py   # TODO: real script name
-```
-
 ## Key results (test set, log1p model)
 
 | Metric | Value |
