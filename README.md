@@ -17,6 +17,17 @@ Full details are in the project report.
 | CS24B1045 | Priyanka HL |
 | CS24B1060 | Maddi Sonali Reddy |
 
+## Project objectives
+
+1. **Data pipeline:** clean, transform and split the traffic data, handling missing values, duplicates, class imbalance and data leakage.
+2. **Supervised comparison:** compare Random Forest and XGBoost for classifying known attacks.
+3. **Anomaly detection comparison:** compare Isolation Forest and a Deep Autoencoder for flagging unusual traffic.
+4. **Unseen attack experiment:** test whether the anomaly models can detect an attack class left out of training (PortScan).
+5. **Model selection:** pick the best model from each category based on detection, false alarms and cost.
+6. **Hybrid NIDS:** combine the selected models into one system that detects both known and unusual traffic.
+7. **Evaluation:** compare the individual models and the hybrid on detection, false positives, false negatives and cost.
+8. **Explainability:** use SHAP to show which features drive each model's decisions.
+
 ## Models
 
 | Category | Model | Selected for hybrid |
@@ -58,9 +69,9 @@ The stacked hybrid matches the standalone Random Forest on known attacks. Adding
 
 ## Contributions
 
-| Member | Contribution | branch |
+| Member | Contribution | Branch |
 |---|---|---|
-| Harini Senthil Kumar | XG Boost, Hybrid NIDS| m2 |
-| Vennela V. | Isolation forest, Hybrid NIDS| mem3 |
-| Priyanka HL | Data cleaning, Random forest, SHAP| member1 |
-| Maddi Sonali Reddy | Data preprocessing, Autoencoder, dashboard| member4|
+| Harini Senthil Kumar | XGBoost, Hybrid NIDS | m2 |
+| Vennela V. | Isolation Forest, Hybrid NIDS | mem3 |
+| Priyanka HL | Data cleaning, Random Forest, SHAP | member1 |
+| Maddi Sonali Reddy | Data preprocessing, Autoencoder, dashboard | member4 |
