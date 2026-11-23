@@ -1,20 +1,16 @@
-#!/usr/bin/env python
 """
-Pre-training checks: SUPERVISED track (Random Forest & XGBoost).
+Pre-training checks for supervised models
 
 Run from the project root:
-    python scripts/check_supervised.py                         # data/processed
+    python scripts/check_supervised.py                     
     python scripts/check_supervised.py --dir data/processed/log1p
-    python scripts/check_supervised.py --smoke                 # + quick RF/XGB fit on a sample
-
-Exit code 1 if any FAIL. WARNs are decisions to make/document, not blockers.
+    python scripts/check_supervised.py --smoke                
 """
 import argparse
 import json
 import sys
 import time
 from pathlib import Path
-
 import numpy as np
 import pandas as pd
 
@@ -30,15 +26,12 @@ def report(name, ok, detail="", warn_only=False):
     print(f"[{status}] {name}" + (f"  ->  {detail}" if (detail and not ok) else ""))
     return ok
 
-
 def section(title):
     print(f"\n=== {title} ===")
-
 
 def row_hash(X, y=None):
     frame = X if y is None else X.assign(_y=y.to_numpy())
     return pd.util.hash_pandas_object(frame, index=False)
-
 
 def main():
     ap = argparse.ArgumentParser()
@@ -48,7 +41,7 @@ def main():
     args = ap.parse_args()
     D = Path(args.dir)
 
-    # ------------------------------------------------------------------ 1
+    # 1------------------------------------------------------------------ 
     section("1. Files")
     needed = [f"{a}_{s}_supervised.parquet" for s in SPLITS for a in ("X", "y")]
     needed += ["label_mapping.json", "feature_names.json", "scaler.joblib"]
@@ -64,7 +57,7 @@ def main():
     for s in SPLITS:
         print(f"    {s:5s}: {X[s].shape[0]:>10,} rows x {X[s].shape[1]} features")
 
-    # ------------------------------------------------------------------ 2
+    # 2------------------------------------------------------------------ 
     section("2. Structure & alignment")
     for s in SPLITS:
         report(f"{s}: X and y aligned (same length & index)",
@@ -76,7 +69,7 @@ def main():
     non32 = [c for c in feats if X["train"][c].dtype != np.float32]
     report("All features float32", not non32, f"{len(non32)} non-float32 columns", warn_only=True)
 
-    # ------------------------------------------------------------------ 3
+    # 3------------------------------------------------------------------ 
     section("3. Values")
     for s in SPLITS:
         bad = int((~np.isfinite(X[s].to_numpy())).sum())
@@ -93,7 +86,7 @@ def main():
         report(f"{s}: values within [0, 1]", frac == 0,
                f"{frac:.4%} cells outside (unclipped; harmless for trees)", warn_only=True)
 
-    # ------------------------------------------------------------------ 4
+    # 4-----------------------------------------------------------------
     section("4. Leakage between splits")
     idx = {s: X[s].index for s in SPLITS}
     ho_path = D / f"X_heldout_{args.heldout}.parquet"
@@ -120,7 +113,7 @@ def main():
     dup = int(X["train"].duplicated().sum())
     print(f"    info: {dup:,} duplicate feature rows inside train ({dup / len(X['train']):.2%})")
 
-    # ------------------------------------------------------------------ 5
+    # 5------------------------------------------------------------------ 
     section("5. Labels & class balance")
     report("BENIGN encoded as 0", mapping.get("BENIGN") == 0, f"BENIGN -> {mapping.get('BENIGN')}")
     report("Class ids contiguous 0..K-1 (XGBoost requires this)",
@@ -149,7 +142,7 @@ def main():
     imb = counts["train"].max() / max(counts["train"].min(), 1)
     print(f"    info: imbalance ratio largest/smallest train class = {imb:,.0f}:1 -> use class weights")
 
-    # ------------------------------------------------------------------ 6
+    # 6----------------------------------------------------------------- 
     if args.smoke:
         section("6. Smoke test (stratified sample, max 20k rows per class)")
         from sklearn.ensemble import RandomForestClassifier
@@ -191,7 +184,6 @@ def main():
     section("Summary")
     print(f"PASS {_tally['PASS']}   WARN {_tally['WARN']}   FAIL {_tally['FAIL']}")
     sys.exit(1 if _tally["FAIL"] else 0)
-
 
 if __name__ == "__main__":
     main()
