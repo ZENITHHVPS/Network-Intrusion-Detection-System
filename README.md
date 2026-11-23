@@ -15,7 +15,7 @@ Full details are in the project report.
 
 ```bash
 pip install -r requirements.txt
-python data_pipeline.py
+python -m src.preprocessing.data_pipeline
 python train_xgboost.py --stage baseline
 python train_xgboost.py --stage tune
 python train_xgboost.py --stage final
