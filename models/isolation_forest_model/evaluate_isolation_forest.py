@@ -60,9 +60,7 @@ SEED = 42
 ROOT = Path(__file__).resolve().parents[2]
 
 
-# --------------------------------------------------------------------------
-# helpers
-# --------------------------------------------------------------------------
+#HELPERS
 def anomaly_score(model, X):
     return -model.score_samples(X)          # higher = more anomalous
 
@@ -108,9 +106,7 @@ def find_attack_labels(data_dir, n_rows, override=None):
     return None
 
 
-# --------------------------------------------------------------------------
-# plots
-# --------------------------------------------------------------------------
+#PLOTS
 def save_plots(plots_dir, title, y_test, s_test, thr, cm, tuning_df):
     plots_dir.mkdir(parents=True, exist_ok=True)
 
@@ -193,7 +189,7 @@ def save_plots(plots_dir, title, y_test, s_test, thr, cm, tuning_df):
     plt.close(fig)
 
 
-# --------------------------------------------------------------------------
+#############################################################################################################
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--log1p", action="store_true")
@@ -212,7 +208,7 @@ def main():
     for d in (out_dir, scores_dir, plots_dir, ROOT / "models"):
         d.mkdir(parents=True, exist_ok=True)
 
-    # ---------- load ----------
+    #load
     X_train = pd.read_parquet(data_dir / "X_train_anomaly_benign.parquet")
     X_val = pd.read_parquet(data_dir / "X_val_anomaly.parquet")
     y_val = load_labels(data_dir / "y_val_anomaly_binary.parquet")
@@ -234,7 +230,7 @@ def main():
     print(f"    train(benign)={len(X_train):,} val={len(X_val):,} "
           f"test={len(X_test):,} portscan={len(X_port):,}")
 
-    # ---------- hyperparameter tuning (validation only) ----------
+    #hyperparameter tuning (validation only)
     grid = {"n_estimators": [100, 200, 300],
             "max_samples": [256, 512, 1024, 2048],
             "max_features": [0.5, 1.0]}
@@ -269,7 +265,7 @@ def main():
     s_val = anomaly_score(model, X_val)
     print(f"\n[+] Best (val ROC-AUC): {params}   threshold={thr:.6f}")
 
-    # ---------- test (once) ----------
+    #test (once)
     t0 = time.perf_counter()
     s_test = anomaly_score(model, X_test)
     pred_s = time.perf_counter() - t0                       # time to score the whole test set
@@ -279,7 +275,7 @@ def main():
     cm = confusion_matrix(y_test, pred, labels=[0, 1])
     port_recall = float((s_port >= thr).mean())
 
-    # single-flow latency (per-call overhead included), 100 random test rows
+    #single-flow latency (per-call overhead included), 100 random test rows
     idx = np.random.RandomState(SEED).choice(len(X_test), min(100, len(X_test)), replace=False)
     t0 = time.perf_counter()
     for i in idx:
@@ -323,13 +319,13 @@ def main():
     }])
     academic.to_csv(out_dir / "if_academic_table_metrics.csv", index=False)
 
-    # ---------- scores ----------
+    #scores
     pd.DataFrame({"score": s_test.astype("float32"), "y_true": y_test.astype("int8"),
                   "pred": pred.astype("int8")}, index=X_test.index
                  ).to_parquet(scores_dir / "if_test_scores.parquet")
     np.save(scores_dir / "if_heldout_scores.npy", s_port.astype("float32"))
 
-    # ---------- per-attack recall ----------
+    #per-attack recall
     per_attack = None
     if attack_labels is not None:
         lab = attack_labels.to_numpy()
@@ -349,7 +345,7 @@ def main():
         per_attack = pd.DataFrame(out).sort_values("rate")
         per_attack.to_csv(out_dir / "if_per_attack_recall.csv", index=False)
 
-    # ---------- threshold sensitivity (all thresholds derived from VALIDATION) ----------
+    #threshold sensitivity (all thresholds derived from VALIDATION)
     benign_val = s_val[y_val == 0]
     rules = {"best_f1": thr}
     for q in (90, 95, 98, 99, 99.5):
@@ -362,7 +358,7 @@ def main():
     sens_df = pd.DataFrame(sens)
     sens_df.to_csv(out_dir / "if_threshold_sensitivity.csv", index=False)
 
-    # ---------- seed variance (best config refit; thresholds re-derived on val each time) ----------
+    #seed variance (best config refit; thresholds re-derived on val each time)
     seed_rows = []
     for s in [SEED + k for k in range(args.seeds)]:
         if s == SEED:
@@ -392,10 +388,10 @@ def main():
         "n_seeds": len(seed_df)})
     seed_summary.to_csv(out_dir / "if_seed_variance_summary.csv", index=False)
 
-    # ---------- plots ----------
+    #plots
     save_plots(plots_dir, title, y_test, s_test, thr, cm, tuning_df)
 
-    # ---------- combined json ----------
+    #combined json
     combined = {
         "meta": {"tag": tag, "data_dir": str(data_dir), "seed": SEED, "sklearn": sklearn.__version__,
                  "rows": {"train": len(X_train), "val": len(X_val),
