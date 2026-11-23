@@ -41,7 +41,6 @@ def main():
     args = ap.parse_args()
     D = Path(args.dir)
 
-    # 1------------------------------------------------------------------ 
     section("1. Files")
     needed = [f"{a}_{s}_supervised.parquet" for s in SPLITS for a in ("X", "y")]
     needed += ["label_mapping.json", "feature_names.json", "scaler.joblib"]
@@ -57,7 +56,7 @@ def main():
     for s in SPLITS:
         print(f"    {s:5s}: {X[s].shape[0]:>10,} rows x {X[s].shape[1]} features")
 
-    # 2------------------------------------------------------------------ 
+
     section("2. Structure & alignment")
     for s in SPLITS:
         report(f"{s}: X and y aligned (same length & index)",
@@ -69,7 +68,7 @@ def main():
     non32 = [c for c in feats if X["train"][c].dtype != np.float32]
     report("All features float32", not non32, f"{len(non32)} non-float32 columns", warn_only=True)
 
-    # 3------------------------------------------------------------------ 
+     
     section("3. Values")
     for s in SPLITS:
         bad = int((~np.isfinite(X[s].to_numpy())).sum())
@@ -86,7 +85,7 @@ def main():
         report(f"{s}: values within [0, 1]", frac == 0,
                f"{frac:.4%} cells outside (unclipped; harmless for trees)", warn_only=True)
 
-    # 4-----------------------------------------------------------------
+
     section("4. Leakage between splits")
     idx = {s: X[s].index for s in SPLITS}
     ho_path = D / f"X_heldout_{args.heldout}.parquet"
@@ -113,7 +112,7 @@ def main():
     dup = int(X["train"].duplicated().sum())
     print(f"    info: {dup:,} duplicate feature rows inside train ({dup / len(X['train']):.2%})")
 
-    # 5------------------------------------------------------------------ 
+     
     section("5. Labels & class balance")
     report("BENIGN encoded as 0", mapping.get("BENIGN") == 0, f"BENIGN -> {mapping.get('BENIGN')}")
     report("Class ids contiguous 0..K-1 (XGBoost requires this)",
@@ -142,7 +141,7 @@ def main():
     imb = counts["train"].max() / max(counts["train"].min(), 1)
     print(f"    info: imbalance ratio largest/smallest train class = {imb:,.0f}:1 -> use class weights")
 
-    # 6----------------------------------------------------------------- 
+
     if args.smoke:
         section("6. Smoke test (stratified sample, max 20k rows per class)")
         from sklearn.ensemble import RandomForestClassifier
