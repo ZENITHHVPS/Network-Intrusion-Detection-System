@@ -1,6 +1,6 @@
 # Isolation Forest and Hybrid Model
 
-**Member 3** · `<Vennela V / CS24B1030>`
+**Member 3** · Vennela V / CS24B1030
 
 This folder has two parts of our NIDS project on CICIDS2017:
 
