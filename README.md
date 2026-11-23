@@ -15,8 +15,9 @@ Full details are in the project report.
 
 ```bash
 pip install -r requirements.txt
-python src/preprocessing/data_pipeline.py
-python models/random_forest_model/train_random_forest.py
+python -m src.preprocessing.data_pipeline 
+python models/random_forest_model/train_random_forest.py --stage final
+python models/random_forest_model/train_random_forest.py --stage test
 python generate_shap.py              # SHAP plots saved to results/shap/
 ```
 
