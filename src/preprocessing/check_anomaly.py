@@ -1,25 +1,21 @@
-#!/usr/bin/env python
 """
-Pre-training checks: ANOMALY track (Isolation Forest & Autoencoder).
+Pre-training checks for anomaly models
 
 Run from the project root:
-    python scripts/check_anomaly.py                            # data/processed
+    python scripts/check_anomaly.py                          
     python scripts/check_anomaly.py --dir data/processed/log1p
-    python scripts/check_anomaly.py --smoke                    # + quick Isolation Forest baseline
+    python scripts/check_anomaly.py --smoke                 
 
-Exit code 1 if any FAIL. WARNs are decisions to make/document, not blockers.
 """
 import argparse
 import json
 import sys
 import time
 from pathlib import Path
-
 import numpy as np
 import pandas as pd
 
 _tally = {"PASS": 0, "WARN": 0, "FAIL": 0}
-
 
 def report(name, ok, detail="", warn_only=False):
     status = "PASS" if ok else ("WARN" if warn_only else "FAIL")
@@ -27,14 +23,11 @@ def report(name, ok, detail="", warn_only=False):
     print(f"[{status}] {name}" + (f"  ->  {detail}" if (detail and not ok) else ""))
     return ok
 
-
 def section(title):
     print(f"\n=== {title} ===")
 
-
 def row_hash(X):
     return pd.util.hash_pandas_object(X, index=False)
-
 
 def main():
     ap = argparse.ArgumentParser()
@@ -44,7 +37,7 @@ def main():
     args = ap.parse_args()
     D, ho = Path(args.dir), args.heldout.lower()
 
-    # ------------------------------------------------------------------ 1
+    # 1----------------------------------------------------------------- 
     section("1. Files")
     needed = ["X_train_anomaly_benign.parquet",
               "X_val_anomaly.parquet", "y_val_anomaly_binary.parquet",
@@ -70,7 +63,7 @@ def main():
     for name, A in [("benign train", Xb), ("val", Xv), ("test", Xt), ("held-out", Xh)]:
         print(f"    {name:12s}: {len(A):>10,} rows x {A.shape[1]} features")
 
-    # ------------------------------------------------------------------ 2
+    # 2------------------------------------------------------------------ 
     section("2. Structure & alignment")
     report("Columns match feature_names.json in all sets",
            all(list(A.columns) == feats for A in (Xb, Xv, Xt, Xh)))
@@ -87,7 +80,7 @@ def main():
         bad = int((~np.isfinite(A.to_numpy())).sum())
         report(f"{name}: no NaN / inf", bad == 0, f"{bad:,} non-finite cells")
 
-    # ------------------------------------------------------------------ 3
+    # 3------------------------------------------------------------------ 
     section("3. Benign-only training set")
     tr_benign = ys["train"].index[ys["train"] == benign_id]
     report("Benign train holds only BENIGN rows from the train split", bool(Xb.index.isin(tr_benign).all()))
@@ -96,7 +89,7 @@ def main():
     dup = float(Xb.duplicated().mean())
     print(f"    info: {dup:.2%} of benign train rows are duplicate feature vectors")
 
-    # ------------------------------------------------------------------ 4
+    # 4------------------------------------------------------------------ 
     section("4. Held-out (unseen) attack set")
     report("Held-out labels non-empty and all 1", len(yh) > 0 and bool((yh == 1).all()))
     used = np.concatenate([ys[s].index.to_numpy() for s in ys])
@@ -107,7 +100,7 @@ def main():
            f"{same:,} held-out flows ({same / len(Xh):.1%}) look exactly like benign -> "
            "undetectable by any model; report as a ceiling", warn_only=True)
 
-    # ------------------------------------------------------------------ 5
+    # 5------------------------------------------------------------------ 
     section("5. Scaling / clipping effects")
     caps, any_outside = {}, False
     for name, A in [("benign train", Xb), ("val", Xv), ("test", Xt), ("held-out", Xh)]:
@@ -131,13 +124,13 @@ def main():
            f"{squashed}/{len(feats)} features have 99% of benign values < 0.01 -> "
            "prefer the log1p variant for the Autoencoder", warn_only=True)
 
-    # ------------------------------------------------------------------ 6
+    # 6------------------------------------------------------------------ 
     section("6. Evaluation-set composition")
     print(f"    val  anomaly rate: {yv.mean():.2%}  ({int(yv.sum()):,} attacks / {int((yv == 0).sum()):,} benign)")
     print(f"    test anomaly rate: {yt.mean():.2%}  ({int(yt.sum()):,} attacks / {int((yt == 0).sum()):,} benign)")
     print(f"    held-out: {len(Xh):,} attacks only -> pair with test BENIGN rows for precision/FPR")
 
-    # ------------------------------------------------------------------ 7
+    # 7------------------------------------------------------------------ 
     section("7. log1p variant consistency")
     base = D.parent if D.name == "log1p" else D
     L = base / "log1p"
@@ -151,7 +144,7 @@ def main():
             a, b = idx(base, f), idx(L, f)
             report(f"Same rows in base and log1p: {f}", a is not None and b is not None and a.equals(b))
 
-    # ------------------------------------------------------------------ 8
+    # 8------------------------------------------------------------------ 
     section("8. Environment & memory")
     gb = Xb.memory_usage(index=False).sum() / 1e9
     print(f"    benign train in memory: {gb:.2f} GB (float32 tensor for the AE is about the same)")
@@ -165,7 +158,7 @@ def main():
     except ImportError:
         report("torch installed", False)
 
-    # ------------------------------------------------------------------ 9
+    # 9------------------------------------------------------------------ 
     if args.smoke:
         section("9. Smoke test: Isolation Forest baseline")
         from sklearn.ensemble import IsolationForest
