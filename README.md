@@ -26,14 +26,17 @@ Add `--device cuda` to train on a GPU, or `--quick` to test the code on a 10% sa
 
 **Saved models:** `xgb_baseline.joblib`, `xgb_tuned.joblib`
 
-## Key results (test set)
+Results at a glance (test set, 317,953 flows)
+Metric	Baseline	Tuned
+Macro F1	0.9209	0.9679
+Macro F1 (excl. Heartbleed, Infiltration)	0.9479	0.9615
+Macro Recall	0.9016	0.9873
+Macro Precision	0.9655	0.9543
+MCC	0.9940	0.9963
+Attack Detection Rate	99.512%	99.892%
+False Positive Rate	0.1001%	0.0949%
+Missed attacks	245	54 (−78%)
+False alarms	268	254
+Bot recall	0.588	0.889
 
-| Metric | Tuned XGBoost |
-|---|---|
-| Accuracy | 99.90% |
-| Macro F1 | 96.79% |
-| Attack detection rate | 99.89% |
-| False positive rate | 0.095% |
-| Training time (final fit) | 96 min |
-
-The tuned Random Forest scored slightly higher (macro F1 97.44%), so it was used in the hybrid.
+Team decision: The tuned Random Forest scored slightly higher (macro-F1 97.44% vs 96.79%, with higher macro-recall and a lower FPR), so the hybrid NIDS uses RF. XGBoost remains the second benchmarked supervised model.
