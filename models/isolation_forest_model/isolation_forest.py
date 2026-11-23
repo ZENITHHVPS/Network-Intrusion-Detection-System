@@ -49,9 +49,7 @@ ROOT = Path(__file__).resolve().parents[2]
 THRESHOLD_NAMES = ["best_f1", "p95", "p99"]
 
 
-# --------------------------------------------------------------------------
-# helpers
-# --------------------------------------------------------------------------
+#HELPERS
 def anomaly_score(model, X):
     """Higher = more anomalous (sklearn's score_samples is the opposite)."""
     return -model.score_samples(X)
@@ -109,9 +107,7 @@ def git_hash():
         return None
 
 
-# --------------------------------------------------------------------------
-# leakage / data sanity checks (warnings only; they never stop the run)
-# --------------------------------------------------------------------------
+#LEAKAGE/ DATA SANITY CHECKS (warnings only; they never stop the run)
 def row_hashes(df):
     return pd.util.hash_pandas_object(df, index=False).to_numpy()
 
@@ -136,7 +132,7 @@ def sanity_checks(frames):
         if n_nan or n_inf or dup_names:
             print(f"   [WARN] {name}: NaN={n_nan} inf={n_inf} duplicate col names={dup_names}")
 
-    # identical-valued columns (e.g. CICIDS2017's duplicated 'Fwd Header Length'), checked on a sample
+    #identical-valued columns (e.g. CICIDS2017's duplicated 'Fwd Header Length'), checked on a sample
     sample = frames["train"].sample(n=min(20_000, len(frames["train"])), random_state=SEED)
     same = sample.T.duplicated()
     if same.any():
@@ -144,7 +140,7 @@ def sanity_checks(frames):
         print(f"   [WARN] train has columns identical to an earlier column: {cols}")
         summary["identical_columns"] = cols
 
-    # exact-row overlap between splits (near-duplicate flows inflate every metric)
+    #exact-row overlap between splits (near-duplicate flows inflate every metric)
     h_train = row_hashes(frames["train"])
     summary["train_internal_duplicate_frac"] = float(pd.Series(h_train).duplicated().mean())
     print(f"   train: {summary['train_internal_duplicate_frac']:.2%} rows duplicated within the split")
@@ -170,9 +166,7 @@ def sanity_checks(frames):
     return summary
 
 
-# --------------------------------------------------------------------------
-# uncertainty: bootstrap CIs and multi-seed robustness
-# --------------------------------------------------------------------------
+# UNCERTAINITY: bootstrap CIs and multi-seed robustness
 def bootstrap_ci(y, scores, thresholds, n_boot, seed=SEED):
     """Stratified bootstrap 95% CIs for ranking metrics and threshold metrics."""
     rng = np.random.RandomState(seed)
@@ -251,7 +245,7 @@ def zero_day_matched(port_scores, benign_scores, target_prev, n_rep=20, seed=SEE
             "n_portscan": n_pos, "n_benign": n_neg, "prevalence": n_pos / (n_pos + n_neg)}
 
 
-# --------------------------------------------------------------------------
+######################################################################################################################
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--log1p", action="store_true", help="use data/processed/log1p")
@@ -275,7 +269,7 @@ def main():
     model_dir = ROOT / "models"
     model_dir.mkdir(parents=True, exist_ok=True)
 
-    # ---------- load ----------
+    #load
     print(f"[*] Loading data from {data_dir}")
     X_train = pd.read_parquet(data_dir / "X_train_anomaly_benign.parquet")
     X_val = pd.read_parquet(data_dir / "X_val_anomaly.parquet")
@@ -301,7 +295,7 @@ def main():
 
     sanity = sanity_checks({"train": X_train, "val": X_val, "test": X_test, "portscan": X_port})
 
-    # ---------- tune on VALIDATION only (semi-supervised model selection) ----------
+    #tune on VALIDATION only (semi-supervised model selection)
     grid = {
         "n_estimators": [100, 200, 300],
         "max_samples": [256, 512, 1024],
@@ -309,7 +303,7 @@ def main():
     }
     if args.quick:
         grid = {"n_estimators": [100], "max_samples": [256], "max_features": [1.0]}
-    # ---------- resumable tuning ----------
+    #resumable tuning
     progress_file = out_dir / "tuning_progress.json"
     best_file = out_dir / "best_so_far.joblib"
     signature = {"grid": grid, "quick": args.quick, "seed": SEED,
@@ -354,7 +348,7 @@ def main():
                     "params": {"n_estimators": n_est, "max_samples": max_s,
                                "max_features": max_f}}
             joblib.dump(m, best_file)
-        # save progress (write temp file, then replace, so a shutdown can't corrupt it)
+        #save progress (write temp file, then replace, so a shutdown can't corrupt it)
         tmp = progress_file.with_suffix(".tmp")
         tmp.write_text(json.dumps({"signature": signature, "done": done,
                                    "best_pr": best["pr"], "best_params": best["params"]},
@@ -368,11 +362,11 @@ def main():
         print(f"    gap between best and 2nd-best config: {ranked[0][1] - ranked[1][1]:.4f} "
               f"(compare with the seed std below before reading anything into it)")
 
-    # ---------- thresholds from VALIDATION ----------
+    #thresholds from VALIDATION
     val_scores = anomaly_score(model, X_val)
     thresholds = choose_thresholds(y_val, val_scores)
 
-    # ---------- evaluate on TEST (once) ----------
+    #evaluate on TEST (once)
     test_scores = anomaly_score(model, X_test)
     results = {
         "meta": {
@@ -410,7 +404,7 @@ def main():
         print(f"   pr_auc   [{ci['pr_auc'][0]:.4f}, {ci['pr_auc'][1]:.4f}]")
         print(f"   f1@best_f1 [{ci['f1@best_f1'][0]:.4f}, {ci['f1@best_f1'][1]:.4f}]")
 
-    # ---------- zero-day PortScan: PortScan (1) + benign test (0) ----------
+    #zero-day PortScan: PortScan (1) + benign test (0)
     port_scores = anomaly_score(model, X_port)
     benign_test_scores = test_scores[y_test == 0]
     y_zd = np.r_[np.ones(len(port_scores)), np.zeros(len(benign_test_scores))]
@@ -437,7 +431,7 @@ def main():
         else:
             print(f"   {k:28s} {v}")
 
-    # ---------- seed robustness ----------
+    #seed robustness
     if args.seeds > 1:
         print(f"\n[*] Seed robustness: best config over {args.seeds} seeds...")
         results["seed_robustness"] = seed_robustness(
@@ -447,7 +441,7 @@ def main():
         for k in ("pr_auc", "roc_auc", "f1", "recall", "false_positive_rate"):
             print(f"      {k:20s} {s[k]['mean']:.4f} +/- {s[k]['std']:.4f}")
 
-    # ---------- save per-row scores / predictions ----------
+    #save per-row scores / predictions
     def scores_frame(index, score, y=None):
         df = pd.DataFrame({"score": score.astype("float32")}, index=index)
         if y is not None:
@@ -460,7 +454,7 @@ def main():
     scores_frame(X_test.index, test_scores, y_test).to_parquet(out_dir / "scores_test.parquet")
     scores_frame(X_port.index, port_scores).to_parquet(out_dir / "scores_heldout_portscan.parquet")
 
-    # ---------- save ----------
+    #save
     joblib.dump(model, model_dir / f"isolation_forest_{tag}.joblib")
     with open(out_dir / "results.json", "w", encoding="utf-8") as f:
         json.dump(results, f, indent=4)
