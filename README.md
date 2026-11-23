@@ -8,7 +8,7 @@ Full details are in the project report.
 
 ## Setup
 
--Data: shared pipeline output (src/preprocessing/data_pipeline.py), 68 features, 12 classes, seed 42
+- Data: shared pipeline output (src/preprocessing/data_pipeline.py), 68 features, 12 classes, seed 42
 - Model: 500 trees, max_depth 20, max_features 0.5, square-root class weights
 
 ## How to run
