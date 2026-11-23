@@ -26,17 +26,22 @@ Add `--device cuda` to train on a GPU, or `--quick` to test the code on a 10% sa
 
 **Saved models:** `xgb_baseline.joblib`, `xgb_tuned.joblib`
 
-Results at a glance (test set, 317,953 flows)
-Metric	Baseline	Tuned
-Macro F1	0.9209	0.9679
-Macro F1 (excl. Heartbleed, Infiltration)	0.9479	0.9615
-Macro Recall	0.9016	0.9873
-Macro Precision	0.9655	0.9543
-MCC	0.9940	0.9963
-Attack Detection Rate	99.512%	99.892%
-False Positive Rate	0.1001%	0.0949%
-Missed attacks	245	54 (−78%)
-False alarms	268	254
-Bot recall	0.588	0.889
+## Results at a glance (test set, 317,953 flows)
+
+| Metric | Baseline | Tuned |
+|---|---|---|
+| Accuracy | 99.83% | 99.90% |
+| Macro F1 | 92.09% | 96.79% |
+| Macro F1 (excl. Heartbleed, Infiltration) | 94.79% | 96.15% |
+| Macro Recall | 90.16% | 98.73% |
+| Macro Precision | 96.55% | 95.43% |
+| MCC | 0.9940 | 0.9963 |
+| Attack detection rate | 99.51% | 99.89% |
+| False positive rate | 0.100% | 0.095% |
+| Missed attacks | 245 | 54 |
+| False alarms | 268 | 254 |
+| Bot recall | 58.8% | 88.9% |
+| Training time (final fit) | 3.2 min | 96 min |
+| Model size | 1.6 MB | 30.6 MB |
 
 Team decision: The tuned Random Forest scored slightly higher (macro-F1 97.44% vs 96.79%, with higher macro-recall and a lower FPR), so the hybrid NIDS uses RF. XGBoost remains the second benchmarked supervised model.
