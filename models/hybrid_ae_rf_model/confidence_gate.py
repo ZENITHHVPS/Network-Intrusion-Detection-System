@@ -27,9 +27,9 @@ import pandas as pd
 from train_hybrid_ae_rf import (DATA, MOD, RES, binary_metrics, fuse, load_feature_model,
                                 load_split, log, save_json)
 
-# Fixed in advance. Do NOT add or change values after looking at test / PortScan results.
-BUDGETS = [0.005, 0.01]            # total benign false-positive rate allowed: 0.5% and 1.0%
-P_CUTS = [0.5, 0.9, 0.99, None]    # None = no gate (plain rule), the fair baseline
+#Fixed in advance. Do NOT add or change values after looking at test / PortScan results.
+BUDGETS = [0.005, 0.01]            #total benign false-positive rate allowed: 0.5% and 1.0%
+P_CUTS = [0.5, 0.9, 0.99, None]    #None = no gate (plain rule), the fair baseline
 
 CONFIG_FILE = RES / "gate_config.json"
 
@@ -50,13 +50,13 @@ def gate_mask(p_benign, p_cut):
 def fit_tau(p_benign, err, rf_flag, y, p_cut, budget):
     """Largest-coverage tau whose benign false-positive rate stays within `budget` (validation)."""
     benign = y == 0
-    already = int((rf_flag & benign).sum())                  # false alarms the RF makes by itself
+    already = int((rf_flag & benign).sum())                  #false alarms the RF makes by itself
     allowed = int(np.floor(budget * benign.sum())) - already
     if allowed < 0:
-        return None                                          # budget below the RF's own FPR
+        return None                                          #budget below the RF's own FPR
     eligible = np.sort(err[benign & ~rf_flag & gate_mask(p_benign, p_cut)])[::-1]
     if allowed >= len(eligible):
-        return -1.0                                          # gate never adds more than the budget
+        return -1.0                                          #gate never adds more than the budget
     return float(eligible[allowed])
 
 
@@ -69,9 +69,7 @@ def name_of(p_cut, budget):
     return f"{gate}_fpr{budget * 100:.1f}pct"
 
 
-# ============================================================
-# VALIDATION: choose tau, print table (test set untouched)
-# ============================================================
+#VALIDATION: choose tau, print table (test set untouched)
 def stage_val():
     rf = joblib.load(MOD / "hybrid_rf.joblib")
     fm = load_feature_model()
@@ -105,9 +103,7 @@ def stage_val():
     log(f"Saved {CONFIG_FILE}. Review, then run --stage test once.")
 
 
-# ============================================================
-# TEST (once): all pre-registered configs + held-out PortScan
-# ============================================================
+#TEST (once): all pre-registered configs + held-out PortScan
 def stage_test(force=False):
     lock = RES / "GATE_TEST_USED.txt"
     if lock.exists() and not force:
