@@ -33,14 +33,12 @@ from confidence_gate import CONFIG_FILE, apply_rule
 from train_hybrid_ae_rf import (DATA, MOD, RES, fuse, load_feature_model, load_names,
                                 load_split, log, save_json)
 
-# Columns of the tables (names from gate_config.json). Override with --configs.
+#Columns of the tables (names from gate_config.json). Override with --configs.
 DEFAULT_CONFIGS = ["nogate_fpr0.5pct", "gate_p0.99_fpr0.5pct",
                    "nogate_fpr1.0pct", "gate_p0.99_fpr1.0pct"]
 
 
-# ============================================================
 # 1. Scoring: AE pass + RF probabilities (timed)
-# ============================================================
 def run_pipeline(rf, fm, X):
     t0 = time.perf_counter()
     Xf, err = fuse(fm, X)
@@ -53,9 +51,7 @@ def run_pipeline(rf, fm, X):
             "rf_pred": rf.classes_[proba.argmax(axis=1)], "t_fuse": t_fuse, "t_rf": t_rf}
 
 
-# ============================================================
 # 2. Variants: stacked RF, and RF + rule/gate
-# ============================================================
 def multiclass_pred(ctx, classes, flag):
     """RF label, except flows the rule newly flags get the RF's most likely ATTACK class."""
     pred = ctx["rf_pred"].copy()
@@ -92,9 +88,7 @@ def make_variant(ctx, classes, cfg=None):
     return {"flag": flag, "pred": pred, "score": score, "t_rule": time.perf_counter() - t0}
 
 
-# ============================================================
 # 3. Metrics
-# ============================================================
 def multiclass_column(y, v, labels, seconds):
     benign, attack = y == 0, y != 0
     pred = v["pred"]
@@ -153,9 +147,7 @@ def format_table(columns):
     return df.apply(lambda col: [fmt(m, x) for m, x in zip(df.index, col)])
 
 
-# ============================================================
 # 4. Main
-# ============================================================
 def label_of(c):
     budget = f"{c['budget'] * 100:.1f}% FPR budget"
     if c["p_cut"] is None:
