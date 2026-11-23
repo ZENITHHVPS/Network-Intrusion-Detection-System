@@ -3,7 +3,7 @@ main.py - Complete Preprocessed Data Verification & Integrity Test Suite
 Verifies data readiness for all 4 models:
   - Member 1 (Random Forest) & Member 2 (XGBoost) -> Supervised Multi-class Splits
   - Member 3 (Isolation Forest) & Member 4 (Deep Autoencoder) -> Unsupervised & Binary Anomaly Splits
-Also verifies the 'data/processed/log1p/' ablation dataset.
+Also verifies the 'data/processed/log1p/' dataset
 
 Run from project root:
     python main.py
@@ -21,6 +21,7 @@ LOG1P_DIR = PROCESSED_DIR / "log1p"
 
 
 class DataVerificationSuite:
+    # one instance per data folder (main or log1p), collects fails and warnings
     def __init__(self, base_dir: Path, is_log1p: bool = False):
         self.dir = base_dir
         self.is_log1p = is_log1p
@@ -42,7 +43,7 @@ class DataVerificationSuite:
     def check_metadata(self):
         """Validates scaler, feature definitions, and label mappings."""
         print(f"\n--- [{self.tag}] 1. METADATA & ARTIFACT CHECKS ---")
-        
+
         # Resolve artifact paths (checking local folder first, then falling back to parent processed dir)
         feature_path = self.dir / "feature_names.json" if (self.dir / "feature_names.json").exists() else PROCESSED_DIR / "feature_names.json"
         scaler_path = self.dir / "scaler.joblib" if (self.dir / "scaler.joblib").exists() else PROCESSED_DIR / "scaler.joblib"
@@ -103,6 +104,7 @@ class DataVerificationSuite:
             self.log_pass(f"{name}: column count and header sequence match ({len(df.columns)} cols)")
 
         # 3. [0, 1] Boundary constraints
+        # small tolerance for float32 rounding
         v_min = float(df.min().min())
         v_max = float(df.max().max())
         if is_bounded_01:
@@ -120,7 +122,7 @@ class DataVerificationSuite:
             self.log_warn(f"{name}: Found {len(zero_var_cols)} constant (zero-variance) columns: {zero_var_cols[:5]}...")
 
     def run_supervised_checks(self, features: list, label_map: dict):
-        """Checks readiness for Member 1 (Random Forest) and Member 2 (XGBoost)."""
+        # Checks readiness for RF & XGB
         print(f"\n--- [{self.tag}] 2. SUPERVISED DATA CHECKS (Random Forest & XGBoost) ---")
         splits = ["train", "val", "test"]
 
@@ -157,7 +159,7 @@ class DataVerificationSuite:
                 self.log_pass(f"y_{split}_supervised contains {len(unique_labels)} classes aligned with label_mapping")
 
     def run_anomaly_checks(self, features: list):
-        """Checks readiness for Member 3 (Isolation Forest) and Member 4 (Deep Autoencoder)."""
+       # Checks readiness for IF & AE
         print(f"\n--- [{self.tag}] 3. ANOMALY DATA CHECKS (Isolation Forest & Autoencoder) ---")
 
         # 1. Pure Benign Train Set (M3 & M4 fit exclusively on normal traffic)
@@ -199,7 +201,7 @@ class DataVerificationSuite:
                 attack_cnt = int((y == 1).sum())
                 self.log_pass(f"y_{split}_anomaly_binary validated: {normal_cnt:,} Normal (0), {attack_cnt:,} Attacks (1)")
 
-        # 3. Held-out Zero-day subset (Objective 4: PortScan)
+        # 3. Held-out Zero-day subset 
         heldout_x = self.dir / "X_heldout_portscan.parquet"
         heldout_y = self.dir / "y_heldout_portscan.parquet"
         if heldout_x.exists():
@@ -230,6 +232,7 @@ class DataVerificationSuite:
             return False
 
         # Run supervised tests if files exist
+        # (log1p folder is allowed to have no supervised files)
         sup_exists = (self.dir / "X_train_supervised.parquet").exists()
         if sup_exists:
             self.run_supervised_checks(features, label_map)
@@ -249,12 +252,12 @@ class DataVerificationSuite:
                 print(f"    - {f}")
             return False
         else:
-            print(f"[✓] {self.tag} DATASET IS FULLY VALIDATED AND READY FOR MODEL TRAINING.")
+            print(f"[*] {self.tag} DATASET IS FULLY VALIDATED AND READY FOR MODEL TRAINING.")
             return True
 
 
 def main():
-    # 1. Test Base Processed Directory (Used by RF, XGBoost, Isolation Forest, Autoencoder)
+    # 1. Test Base Processed Directory (used by all 4 models)
     main_suite = DataVerificationSuite(base_dir=PROCESSED_DIR, is_log1p=False)
     main_ok = main_suite.run_all()
 
@@ -269,6 +272,7 @@ def main():
         print("    If you have not generated the log1p ablation set yet, run your")
         print("    data_pipeline.py with log1p transformation enabled.")
         print("=" * 70)
+        # missing log1p is not treated as a failure
         log1p_ok = True
 
     # Global Status

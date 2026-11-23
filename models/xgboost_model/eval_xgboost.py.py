@@ -60,7 +60,7 @@ def main():
     reliable = per_class["support"] >= RARE_MIN
     small = per_class.index[~reliable].tolist()
 
-    # ---- NIDS view: benign (0) vs any attack
+    # NIDS view: benign (0) vs any attack
     benign, attack = y == 0, y != 0
     fpr = (pred[benign] != 0).mean()
     detection = (pred[attack] != 0).mean()

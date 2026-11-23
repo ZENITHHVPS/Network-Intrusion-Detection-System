@@ -7,6 +7,7 @@ LEAKAGE_IDENTIFIERS = [
     "timestamp", "source port", "src port", "destination port", "dst port"
 ]
 
+
 def clean_column_names(df: pd.DataFrame) -> pd.DataFrame:
     """Standardize column names and drop duplicate header collisions."""
     df = df.copy()
@@ -48,7 +49,6 @@ def drop_leakage_identifiers(df: pd.DataFrame) -> pd.DataFrame:
         df = df.drop(columns=cols_to_drop)
     return df
 
-
 def sanitize_numeric_values(df: pd.DataFrame, label_col: str) -> pd.DataFrame:
     """Coerce features to numeric, drop missing labels, remove duplicates, and impute medians."""
     df = df.copy()
@@ -76,11 +76,9 @@ def sanitize_numeric_values(df: pd.DataFrame, label_col: str) -> pd.DataFrame:
             median_val = df[c].median()
             df[c] = df[c].fillna(median_val if not np.isnan(median_val) else 0.0)
 
-
     # Remove zero-variance (constant) features
     constant_cols = [c for c in df.columns if c != label_col and df[c].nunique() <= 1]
     if constant_cols:
         df = df.drop(columns=constant_cols)
-
 
     return df

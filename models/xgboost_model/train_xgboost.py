@@ -23,12 +23,13 @@ Stages (run in order, from the project root):
 
 Outputs:
     results/xgboost/*.csv|json|png    metrics, per-class reports, confusion matrices, tuning log
-    Every evaluation prints four metric groups:
+    Every evaluation prints five sections:
       A. Overall classification   accuracy, macro precision/recall/F1, weighted F1, MCC
       B. Per-class                precision, recall, F1, support for each of the 12 classes
       C. Intrusion detection      attack detection rate, FPR, attack-type accuracy,
                                   false alarms, missed attacks
       D. Computational            training time, inference latency, throughput, model size
+      E. Confusion matrix
     models/xgboost/*.json|joblib      saved baseline + tuned models
 """
 import argparse
@@ -46,6 +47,7 @@ from sklearn.model_selection import ParameterSampler
 from xgboost import XGBClassifier
 
 SEED = 42
+# project root if the script sits in src/models/, otherwise the folder it is run from (Colab)
 ROOT = Path(__file__).resolve().parents[2] if (Path(__file__).resolve().parents[2] / "data").exists() \
     else Path.cwd()
 DATA = ROOT / "data" / "processed"
@@ -53,7 +55,7 @@ RES = ROOT / "results" / "xgboost"
 MOD = ROOT / "models" / "xgboost"
 RARE_MIN = 10        # classes with fewer rows than this in a split are "too small to judge"
 
-# ----------------------------------------------------------------------------- baseline config
+# Baseline config.
 # Close to XGBoost defaults on purpose: the baseline is the reference point the tuning must beat.
 BASELINE_PARAMS = dict(
     n_estimators=1000,          # upper bound; early stopping picks the real number of rounds
@@ -76,7 +78,7 @@ FIXED = dict(
     n_jobs=-1,
 )
 
-# ----------------------------------------------------------------------------- tuning space
+# Random search space (20 configs are sampled from this by default).
 SEARCH_SPACE = dict(
     max_depth=[4, 6, 8, 10],
     learning_rate=[0.05, 0.1, 0.2],
@@ -88,13 +90,15 @@ SEARCH_SPACE = dict(
 )
 
 
-# ============================================================================= data
+# Data loading
+
 def load(quick=False):
     X = {s: pd.read_parquet(DATA / f"X_{s}_supervised.parquet") for s in ("train", "val", "test")}
     y = {s: pd.read_parquet(DATA / f"y_{s}_supervised.parquet")["Label"].astype("int32")
          for s in ("train", "val", "test")}
     mapping = json.loads((DATA / "label_mapping.json").read_text(encoding="utf-8"))
     names = [k for k, _ in sorted(mapping.items(), key=lambda kv: kv[1])]
+    # XGBoost needs labels 0..K-1 with no gaps
     assert sorted(mapping.values()) == list(range(len(mapping))), "class ids must be 0..K-1"
     if quick:
         for s in X:
@@ -131,8 +135,10 @@ def class_weights(y, scheme):
     return y.map(w).to_numpy(dtype="float32")
 
 
-# ============================================================================= train / evaluate
+# Training and evaluation
+
 def fit(params, Xtr, ytr, Xval, yval, weights, device):
+    # validation set is passed in only for early stopping
     model = XGBClassifier(**{**FIXED, **params}, device=device)
     t = time.perf_counter()
     model.fit(Xtr, ytr, sample_weight=weights, eval_set=[(Xval, yval)], verbose=False)
@@ -152,6 +158,7 @@ def evaluate(model, X, y, names, split, fast=False):
 
     p, r, f, s = precision_recall_fscore_support(yt, pred, labels=labels, zero_division=0)
     per_class = pd.DataFrame({"precision": p, "recall": r, "f1": f, "support": s}, index=names)
+    # Heartbleed and Infiltration have only a handful of rows, a single flow swings their F1
     reliable = per_class["support"] >= RARE_MIN
 
     auc = float("nan")
@@ -164,7 +171,7 @@ def evaluate(model, X, y, names, split, fast=False):
     m = {
         "split": split,
         "n_rows": len(X),
-        # ---- overall classification
+        # overall classification
         "accuracy": accuracy_score(yt, pred),
         "macro_precision": precision_score(yt, pred, labels=labels, average="macro", zero_division=0),
         "macro_recall": recall_score(yt, pred, labels=labels, average="macro", zero_division=0),
@@ -174,13 +181,13 @@ def evaluate(model, X, y, names, split, fast=False):
         "weighted_f1": f1_score(yt, pred, labels=labels, average="weighted", zero_division=0),
         "mcc": matthews_corrcoef(yt, pred),
         "macro_roc_auc_ovr": auc,
-        # ---- NIDS view: any attack class counts as "alert"
+        # NIDS view: any attack class counts as "alert"
         "attack_detection_rate": float((pred[attack] != 0).mean()),    # attacks flagged as attack
         "false_positive_rate": float((pred[benign] != 0).mean()),      # benign flagged as attack
         "attack_type_accuracy": float((pred[detected] == yt[detected]).mean()) if detected.any() else float("nan"),
         "false_alarms": int((pred[benign] != 0).sum()),
         "missed_attacks": int((pred[attack] == 0).sum()),
-        # ---- efficiency
+        # efficiency
         "inference_seconds": infer,
         "inference_us_per_flow": 1e6 * infer / len(X),
         "throughput_flows_per_s": len(X) / infer,
@@ -192,7 +199,7 @@ def evaluate(model, X, y, names, split, fast=False):
 
 
 def print_benchmark(title, m, per_class, cm, model_path=None, train_seconds=None):
-    """Prints the four metric groups A-D (same layout for baseline, tuned and Random Forest)."""
+    """Prints sections A-E (same layout for baseline, tuned and Random Forest)."""
     if model_path is not None and Path(model_path).exists():
         m["model_size_mb"] = Path(model_path).stat().st_size / 1e6
     if train_seconds is not None:
@@ -264,6 +271,7 @@ def save_cm_png(cm, path, title):
     except ImportError:
         print("[XGB] matplotlib/seaborn not installed - confusion matrix saved as CSV only")
         return
+    # colour by row share, raw counts would make every small class look empty
     norm = cm.div(cm.sum(axis=1).replace(0, 1), axis=0)
     labels = np.array([[f"{c:,}\n{p:.1%}" if c else "0" for c, p in zip(cr, pr)]
                        for cr, pr in zip(cm.to_numpy(), norm.to_numpy())])
@@ -280,9 +288,10 @@ def log(msg):
     print(f"[XGB] {msg}", flush=True)
 
 
-# ============================================================================= stages
+# Stages
+
 def stage_baseline(X, y, names, device):
-    # ---- class imbalance analysis (train distribution)
+    # class imbalance analysis (train distribution)
     dist = pd.DataFrame({s: y[s].value_counts() for s in y}).fillna(0).astype(int)
     dist.index = [names[i] for i in dist.index]
     dist["train_%"] = (100 * dist["train"] / dist["train"].sum()).round(4)
@@ -294,11 +303,12 @@ def stage_baseline(X, y, names, device):
     dist = dist.sort_values("train", ascending=False)
     dist.to_csv(RES / "class_distribution.csv")
     log("class distribution:\n" + dist.to_string())
+    # test counts are only printed here, nothing is fitted or scored on test
     small = dist.index[(dist["val"] < 10) | (dist["test"] < 10)].tolist()
     if small:
         log(f"WARNING: <10 rows in val/test for {small}: their F1 is very noisy; report them separately")
 
-    # ---- baseline + three weighting schemes, all scored on validation
+    # baseline + three weighting schemes, all scored on validation
     rows, best = [], None
     for scheme in ("none", "sqrt", "balanced"):
         log(f"baseline, class weighting = {scheme} ...")
@@ -328,11 +338,13 @@ def stage_baseline(X, y, names, device):
                             for s in ("none", "sqrt", "balanced")}).loc[names]
     recalls.to_csv(RES / "imbalance_per_class_recall_val.csv")
     log("per-class recall by weighting scheme (val):\n" + recalls.round(3).to_string())
+    # tune stage reads the winning scheme from this file
     json.dump({"weighting": best[0]}, open(RES / "chosen_weighting.json", "w"))
     log(f"chosen weighting for tuning: {best[0]} (best val macro-F1)")
 
 
 def stage_tune(X, y, names, device, n_iter, frac):
+    # RandomizedSearchCV isn't used: it cross-validates on train folds and can't early-stop
     scheme = json.load(open(RES / "chosen_weighting.json"))["weighting"]
     idx = stratified_sample(y["train"], frac)
     Xs, ys = X["train"].loc[idx], y["train"].loc[idx]
@@ -357,6 +369,7 @@ def stage_tune(X, y, names, device, n_iter, frac):
         pd.DataFrame(rows).to_csv(out, index=False)          # save after every config
         log(f"[{i + 1}/{n_iter}] macro-F1 {m['macro_f1']:.4f} | {secs:.0f}s | {p}")
 
+    # best macro-F1 wins, lower FPR breaks ties
     res = pd.DataFrame(rows).sort_values(["val_macro_f1", "val_fpr"], ascending=[False, True])
     log("top 5 configurations (validation):\n" + res.head(5).to_string(index=False))
     best = res.iloc[0]
@@ -369,6 +382,7 @@ def stage_tune(X, y, names, device, n_iter, frac):
 def stage_final(X, y, names, device):
     cfg = json.load(open(RES / "best_params.json"))
     log(f"refitting best config on the FULL train set: {cfg}")
+    # more rounds allowed here since the full train set needs longer to converge
     model, secs = fit({**cfg["params"], "n_estimators": 3000}, X["train"], y["train"],
                       X["val"], y["val"], class_weights(y["train"], cfg["weighting"]), device)
     m, rep, cm, per_class = evaluate(model, X["val"], y["val"], names, "val")
@@ -384,6 +398,7 @@ def stage_final(X, y, names, device):
     times_path = RES / "train_times.json"
     times = json.load(open(times_path)) if times_path.exists() else {}
     save_json({**times, "tuned": secs}, times_path)
+    # gain importance; features never used in a split get 0
     imp = pd.Series(model.get_booster().get_score(importance_type="gain")).reindex(
         X["train"].columns).fillna(0).sort_values(ascending=False)
     imp.to_csv(RES / "tuned_feature_importance_gain.csv", header=["gain"])
@@ -391,6 +406,7 @@ def stage_final(X, y, names, device):
 
 
 def stage_test(X, y, names, force):
+    # lock file stops the test set from being used a second time
     lock = RES / "TEST_SET_USED.txt"
     if lock.exists() and not force:
         raise SystemExit(f"Test set already evaluated ({lock.read_text().strip()}). "
@@ -417,7 +433,6 @@ def stage_test(X, y, names, force):
         + table.drop(columns=["split"]).T.to_string())
 
 
-# ============================================================================= main
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--stage", required=True, choices=["baseline", "tune", "final", "test"])
