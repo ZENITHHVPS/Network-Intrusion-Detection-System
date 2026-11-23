@@ -31,13 +31,11 @@ from sklearn.metrics import (accuracy_score, classification_report,
                              recall_score
                             )
 
-# ============================================================
 # 1. CONFIGURATION
-# ============================================================
 SEED = 42
 ROOT = Path(__file__).resolve().parent            # script lives in the project root
 
-# The AE is the LOG1P variant, so every input (AE and RF) comes from the log1p folder.
+#The AE is the LOG1P variant, so every input (AE and RF) comes from the log1p folder.
 DATA_BASE = ROOT / "data" / "processed"
 DATA = DATA_BASE / "log1p"
 
@@ -53,8 +51,8 @@ MOD.mkdir(parents=True, exist_ok=True)
 LATENT_LAYER = "latent_bottleneck"
 FINAL_TREES = 500
 
-# Used only if results/random_forest/best_params.json is missing
-# (these are the tuned values from the RF tuning stage).
+#Used only if results/random_forest/best_params.json is missing
+#(these are the tuned values from the RF tuning stage).
 FALLBACK_CONFIG = {
     "params": {"max_depth": 20, "min_samples_split": 2, "min_samples_leaf": 1,
                "max_features": 0.5, "max_samples": None},
@@ -66,9 +64,7 @@ def log(msg):
     print(f"[HYBRID] {msg}", flush=True)
 
 
-# ============================================================
 # 2. HELPERS (same definitions as the RF training script)
-# ============================================================
 def save_json(path, data):
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     Path(path).write_text(json.dumps(data, indent=2, allow_nan=False), encoding="utf-8")
@@ -152,9 +148,7 @@ def load_rf_config():
     return cfg["params"], cfg["weighting"]
 
 
-# ============================================================
 # 3. DATA LOADING (log1p folder)
-# ============================================================
 def load_split(split):
     X = pd.read_parquet(DATA / f"X_{split}_supervised.parquet").reset_index(drop=True)
     y = pd.read_parquet(DATA / f"y_{split}_supervised.parquet")["Label"].astype("int32").reset_index(drop=True)
@@ -170,9 +164,7 @@ def load_names():
     raise FileNotFoundError("label_mapping.json not found in data/processed/log1p or data/processed")
 
 
-# ============================================================
 # 4. AUTOENCODER -> FEATURE FUSION
-# ============================================================
 def load_feature_model():
     ae = tf.keras.models.load_model(AE_PATH, compile=False)   # frozen, no retraining
     ae.trainable = False
@@ -195,9 +187,7 @@ def fused_feature_names(original_cols, latent_dim):
     return list(original_cols) + [f"ae_latent_{i}" for i in range(latent_dim)] + ["ae_recon_error"]
 
 
-# ============================================================
 # 5. CHECK: smoke test + leakage check (no training, no test set)
-# ============================================================
 def stage_check():
     log(f"Project root: {ROOT}")
     for p in (AE_PATH, AE_META, DATA / "X_train_supervised.parquet", DATA / "y_train_supervised.parquet",
@@ -215,7 +205,7 @@ def stage_check():
     yy = y_va.iloc[:5000].to_numpy()
     log(f"Mean error  benign: {err[yy == 0].mean():.6f} | attack: {err[yy != 0].mean():.6f} (attack should be higher)")
 
-    # Leakage check: AE saw the benign TRAIN rows, so their error may be lower than on benign VAL rows.
+    #Leakage check: AE saw the benign TRAIN rows, so their error may be lower than on benign VAL rows.
     X_tr, y_tr = load_split("train")
     sample = X_tr[y_tr == 0].sample(200_000, random_state=SEED)
     _, e_tr = fuse(fm, sample)
@@ -234,9 +224,7 @@ def stage_check():
         + "  (should be False for a held-out experiment)")
 
 
-# ============================================================
 # 6. FIT: train RF on fused features, validation only
-# ============================================================
 def stage_fit(trees):
     params, scheme = load_rf_config()
     X_tr, y_tr = load_split("train")
@@ -267,7 +255,7 @@ def stage_fit(trees):
     log("Top 10 features:\n" + imp.head(10).to_string())
     log(f"ae_recon_error rank: {list(imp.index).index('ae_recon_error') + 1} of {len(imp)}")
 
-    # ---- validation evaluation (test set untouched) ----
+    #validation evaluation (test set untouched)
     Xf_va, err_va = fuse(feature_model, X_va)
     metrics, report, cm, pred = evaluate(rf, Xf_va, y_va, class_names, "val")
     metrics.update(train_seconds=seconds, n_estimators=trees, weighting=scheme, **params)
@@ -275,7 +263,7 @@ def stage_fit(trees):
     report.to_csv(RES / "hybrid_val_report.csv")
     cm.to_csv(RES / "hybrid_val_confusion.csv")
 
-    # ---- thresholds for the decision rule, both chosen on VALIDATION ----
+    #thresholds for the decision rule, both chosen on VALIDATION
     tau_f1 = json.loads(AE_META.read_text(encoding="utf-8"))["calibrated_threshold"]
     yv = y_va.to_numpy()
     tau_p99 = float(np.percentile(err_va[yv == 0], 99))
@@ -297,9 +285,7 @@ def stage_fit(trees):
         + json.dumps(summary, indent=2))
 
 
-# ============================================================
 # 7. TEST (once) + held-out PortScan
-# ============================================================
 def stage_test(force=False):
     lock = RES / "TEST_SET_USED.txt"
     if lock.exists() and not force:
@@ -345,9 +331,7 @@ def stage_test(force=False):
         f"latency (RF only): {metrics['inference_us_per_flow']:.1f} us/flow")
 
 
-# ============================================================
 # 8. MAIN
-# ============================================================
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Hybrid AE + Random Forest")
     ap.add_argument("--stage", required=True, choices=["check", "fit", "test"])
