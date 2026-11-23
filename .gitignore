@@ -9,6 +9,7 @@ data/processed/*.parquet
 data/processed/*.csv
 data/processed/*
 
+results/shap/tree_explainer.joblib
 # Serialized scalers and encoders
 data/processed/*.joblib
 models/shap/*.joblib
