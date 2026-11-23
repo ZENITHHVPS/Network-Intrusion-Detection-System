@@ -26,7 +26,7 @@ from train_hybrid_ae_rf import (AE_PATH, MOD, RES, fuse, load_feature_model, loa
 
 OUT = MOD / "hybrid_nids_bundle.joblib"
 LATENT_LAYER = "latent_bottleneck"
-DEFAULT_MODE = "gate_p0.99_fpr0.5pct"          # balanced operating point from the report
+DEFAULT_MODE = "gate_p0.99_fpr0.5pct"          #balanced operating point from the report
 
 
 def extract_ae(ae):
@@ -35,7 +35,7 @@ def extract_ae(ae):
     for l in ae.layers:
         kind = l.__class__.__name__
         if kind in ("InputLayer", "Dropout"):
-            continue                                          # no effect at inference time
+            continue    #no effect at inference time
         if kind == "Dense":
             W, b = l.get_weights()
             layers.append({"type": "dense", "name": l.name, "W": W.astype(np.float32),
@@ -72,7 +72,7 @@ def main():
                      "numpy": np.__version__, "joblib": joblib.__version__, "tensorflow": tf.__version__},
     }
 
-    # ---- verification against the existing (Keras) pipeline ----
+    #verification against the existing (Keras) pipeline
     X = X_va.iloc[:5000]
     fused_k, err_k = fuse(load_feature_model(), X)
     fused_b, err_b = build_fused(bundle, X)
