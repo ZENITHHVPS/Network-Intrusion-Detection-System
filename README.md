@@ -13,7 +13,7 @@ Full details are in the project report.
 
 ```bash
 pip install -r requirements.txt
-python data_pipeline.py
+python -m src.preprocessing.data_pipeline
 python isolation_forest.py            # Isolation Forest (Script A)
 python evaluate_isolation_forest.py   # Isolation Forest (Script B)
 python train_hybrid_ae_rf.py          # saves hybrid_rf.joblib
