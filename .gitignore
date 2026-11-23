@@ -11,7 +11,7 @@ data/processed/*
 
 # Serialized scalers and encoders
 data/processed/*.joblib
-
+models/shap/*.joblib
 # Python bytecode
 __pycache__/
 *.pyc

@@ -13,11 +13,11 @@ jupyter>=1.0.0
 
 # Supervised & Anomaly Detection Models (M1, M2, M3)
 scikit-learn>=1.5.0
-# xgboost>=2.0.0
+ xgboost>=2.0.0
 
 # Deep Learning Anomaly Detector (Member 4: Deep Autoencoder)
  tensorflow>=2.16.0
 
 # Explainability & Dashboard (Phase 7 & Phase 8)
-# shap>=0.45.0
-# streamlit>=1.32.0
+ shap>=0.45.0
+ streamlit>=1.32.0
