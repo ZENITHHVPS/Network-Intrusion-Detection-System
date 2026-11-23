@@ -1,4 +1,4 @@
-# Hybrid Network Intrusion Detection System (NIDS)
+# Network Intrusion Detection System (NIDS)
 
 **CS3006 Introduction to Data Science for Engineers** · Professor: Dr. Jagadeesh Kakarla
 
