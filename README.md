@@ -48,7 +48,7 @@ Full details are in the project report.
 
 ```bash
 pip install -r requirements.txt
-python data_pipeline.py      # builds the processed Parquet data
+python -m src.preprocessing.data_pipeline            # builds the processed Parquet data
 # train each model using the instructions in its folder's README
 python generate_shap.py      # SHAP plots saved to results/shap/
 streamlit run app.py         # dashboard
