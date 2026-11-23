@@ -1,6 +1,6 @@
 # Random Forest and SHAP
 
-**Member 1** · `<Priyanka / CS24B1030>`
+**Member 1** · `<Priyanka / CS24B1045>`
 
 This folder has the supervised Random Forest classifier and the SHAP explainability step for our hybrid NIDS project on CICIDS2017. The RF labels each flow as BENIGN or one of 11 known attacks. It was chosen over XGBoost as the supervised model for the hybrid. SHAP explains all five models.
 
@@ -8,15 +8,15 @@ Full details are in the project report.
 
 ## Setup
 
-- Data: shared pipeline output (`data_pipeline.py`), 68 features, 12 classes, seed 42
+-Data: shared pipeline output (src/preprocessing/data_pipeline.py), 68 features, 12 classes, seed 42
 - Model: 500 trees, max_depth 20, max_features 0.5, square-root class weights
 
 ## How to run
 
 ```bash
 pip install -r requirements.txt
-python data_pipeline.py
-python TODO_train_random_forest.py   # TODO: real script name
+python src/preprocessing/data_pipeline.py
+python models/random_forest_model/train_random_forest.py
 python generate_shap.py              # SHAP plots saved to results/shap/
 ```
 
