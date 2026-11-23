@@ -1,21 +1,26 @@
-Feature,Mean_Absolute_SHAP
-Bwd Packet Length Std,0.010899034246569352
-ae_recon_error,0.007199942698567053
-Init_Win_bytes_backward,0.004812863281071388
-Total Length of Bwd Packets,0.004524627033946706
-Subflow Bwd Bytes,0.004395218207504959
-Fwd Packet Length Max,0.0033142610594751633
-Bwd Packet Length Mean,0.002912159807391806
-Avg Bwd Segment Size,0.0027041966229196033
-Init_Win_bytes_forward,0.002388906833400866
-Packet Length Std,0.002279558472874053
-Packet Length Variance,0.0021958935410730795
-Total Length of Fwd Packets,0.0020313353419256237
-Bwd Packet Length Max,0.0017399791545277784
-Subflow Fwd Bytes,0.0017320599204598247
-ae_latent_1,0.00171760467627386
-ae_latent_8,0.001251140288534863
-ae_latent_10,0.0012230667683748061
-ae_latent_5,0.001222493903370263
-Average Packet Size,0.0012104863725690379
-Max Packet Length,0.0011265860284381509
+Rank,Feature,Mean_Absolute_SHAP,Feature_Category
+1,Bwd Packet Length Std,0.010899034246569352,Network Flow Feature
+2,ae_recon_error,0.007199942698567053,Network Flow Feature
+3,Init_Win_bytes_backward,0.004812863281071388,Network Flow Feature
+4,Total Length of Bwd Packets,0.004524627033946706,Network Flow Feature
+5,Subflow Bwd Bytes,0.004395218207504959,Network Flow Feature
+6,Fwd Packet Length Max,0.0033142610594751633,Network Flow Feature
+7,Bwd Packet Length Mean,0.002912159807391806,Network Flow Feature
+8,Avg Bwd Segment Size,0.0027041966229196033,Network Flow Feature
+9,Init_Win_bytes_forward,0.002388906833400866,Network Flow Feature
+10,Packet Length Std,0.002279558472874053,Network Flow Feature
+11,Packet Length Variance,0.0021958935410730795,Network Flow Feature
+12,Total Length of Fwd Packets,0.0020313353419256237,Network Flow Feature
+13,Bwd Packet Length Max,0.0017399791545277784,Network Flow Feature
+14,Subflow Fwd Bytes,0.0017320599204598247,Network Flow Feature
+15,ae_latent_1,0.00171760467627386,AE Latent Code
+16,ae_latent_8,0.001251140288534863,AE Latent Code
+17,ae_latent_10,0.0012230667683748061,AE Latent Code
+18,ae_latent_5,0.001222493903370263,AE Latent Code
+19,Average Packet Size,0.0012104863725690379,Network Flow Feature
+20,Max Packet Length,0.0011265860284381509,Network Flow Feature
+21,Fwd Packet Length Std,0.0010426329529399552,Network Flow Feature
+22,ae_latent_14,0.0009764372637645593,AE Latent Code
+23,Fwd IAT Std,0.0009716791541269812,Network Flow Feature
+24,Packet Length Mean,0.0009368676178177074,Network Flow Feature
+25,ae_latent_9,0.0008214147444818217,AE Latent Code
