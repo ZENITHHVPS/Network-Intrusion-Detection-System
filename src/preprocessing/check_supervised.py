@@ -56,7 +56,6 @@ def main():
     for s in SPLITS:
         print(f"    {s:5s}: {X[s].shape[0]:>10,} rows x {X[s].shape[1]} features")
 
-
     section("2. Structure & alignment")
     for s in SPLITS:
         report(f"{s}: X and y aligned (same length & index)",
@@ -84,7 +83,6 @@ def main():
         frac = float(((a < 0) | (a > 1)).mean())
         report(f"{s}: values within [0, 1]", frac == 0,
                f"{frac:.4%} cells outside (unclipped; harmless for trees)", warn_only=True)
-
 
     section("4. Leakage between splits")
     idx = {s: X[s].index for s in SPLITS}
@@ -140,7 +138,6 @@ def main():
            f"off: {ratio[~ok].round(2).to_dict()}", warn_only=True)
     imb = counts["train"].max() / max(counts["train"].min(), 1)
     print(f"    info: imbalance ratio largest/smallest train class = {imb:,.0f}:1 -> use class weights")
-
 
     if args.smoke:
         section("6. Smoke test (stratified sample, max 20k rows per class)")

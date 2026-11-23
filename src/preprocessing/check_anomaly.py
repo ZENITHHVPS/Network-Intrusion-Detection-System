@@ -36,7 +36,6 @@ def main():
     args = ap.parse_args()
     D, ho = Path(args.dir), args.heldout.lower()
 
-
     section("1. Files")
     needed = ["X_train_anomaly_benign.parquet",
               "X_val_anomaly.parquet", "y_val_anomaly_binary.parquet",
@@ -62,7 +61,6 @@ def main():
     for name, A in [("benign train", Xb), ("val", Xv), ("test", Xt), ("held-out", Xh)]:
         print(f"    {name:12s}: {len(A):>10,} rows x {A.shape[1]} features")
 
-
     section("2. Structure & alignment")
     report("Columns match feature_names.json in all sets",
            all(list(A.columns) == feats for A in (Xb, Xv, Xt, Xh)))
@@ -79,7 +77,6 @@ def main():
         bad = int((~np.isfinite(A.to_numpy())).sum())
         report(f"{name}: no NaN / inf", bad == 0, f"{bad:,} non-finite cells")
 
-
     section("3. Benign-only training set")
     tr_benign = ys["train"].index[ys["train"] == benign_id]
     report("Benign train holds only BENIGN rows from the train split", bool(Xb.index.isin(tr_benign).all()))
@@ -87,7 +84,6 @@ def main():
            f"{len(Xb):,} vs {len(tr_benign):,}", warn_only=True)
     dup = float(Xb.duplicated().mean())
     print(f"    info: {dup:.2%} of benign train rows are duplicate feature vectors")
-
 
     section("4. Held-out (unseen) attack set")
     report("Held-out labels non-empty and all 1", len(yh) > 0 and bool((yh == 1).all()))
@@ -98,7 +94,6 @@ def main():
     report("Held-out flows are not feature-identical to benign train flows", same == 0,
            f"{same:,} held-out flows ({same / len(Xh):.1%}) look exactly like benign -> "
            "undetectable by any model; report as a ceiling", warn_only=True)
-
 
     section("5. Scaling / clipping effects")
     caps, any_outside = {}, False
@@ -123,12 +118,10 @@ def main():
            f"{squashed}/{len(feats)} features have 99% of benign values < 0.01 -> "
            "prefer the log1p variant for the Autoencoder", warn_only=True)
 
-
     section("6. Evaluation-set composition")
     print(f"    val  anomaly rate: {yv.mean():.2%}  ({int(yv.sum()):,} attacks / {int((yv == 0).sum()):,} benign)")
     print(f"    test anomaly rate: {yt.mean():.2%}  ({int(yt.sum()):,} attacks / {int((yt == 0).sum()):,} benign)")
     print(f"    held-out: {len(Xh):,} attacks only -> pair with test BENIGN rows for precision/FPR")
-
 
     section("7. log1p variant consistency")
     base = D.parent if D.name == "log1p" else D
@@ -142,7 +135,6 @@ def main():
                   "X_test_anomaly.parquet", f"X_heldout_{ho}.parquet"):
             a, b = idx(base, f), idx(L, f)
             report(f"Same rows in base and log1p: {f}", a is not None and b is not None and a.equals(b))
-
 
     section("8. Environment & memory")
     gb = Xb.memory_usage(index=False).sum() / 1e9

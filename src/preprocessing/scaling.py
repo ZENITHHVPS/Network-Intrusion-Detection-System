@@ -6,20 +6,39 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> ceadd6b38bba39569737c8205a901df3c1423323
 def get_feature_columns(df: pd.DataFrame, label_col: str) -> List[str]:
     """Retrieve all numeric feature columns excluding the target."""
     return [c for c in df.select_dtypes(include=[np.number]).columns.tolist() if c != label_col]
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> ceadd6b38bba39569737c8205a901df3c1423323
 def get_log_columns(X_train: pd.DataFrame) -> List[str]:
     """Columns safe for log1p: non-negative in train (skips e.g. Init_Win_bytes_* which contain -1)."""
     return [c for c in X_train.columns if X_train[c].min() >= 0]
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> ceadd6b38bba39569737c8205a901df3c1423323
 def apply_log1p(X: pd.DataFrame, log_cols: List[str]) -> pd.DataFrame:
     """log1p on heavy-tailed columns. Lower-clips at 0 so unseen negatives can't produce NaN."""
     X = X.copy()
     X[log_cols] = np.log1p(X[log_cols].clip(lower=0))
     return X
 
+<<<<<<< HEAD
 def _transform(scaler: MinMaxScaler, X: pd.DataFrame, clip: bool) -> pd.DataFrame:
     # val/test can go past the train min/max, clip keeps them inside [0, 1]
     arr = scaler.transform(X)
@@ -28,6 +47,20 @@ def _transform(scaler: MinMaxScaler, X: pd.DataFrame, clip: bool) -> pd.DataFram
     # keep the original index so rows can still be matched to their labels
     return pd.DataFrame(arr.astype("float32"), columns=X.columns, index=X.index)
 
+=======
+
+
+
+def _transform(scaler: MinMaxScaler, X: pd.DataFrame, clip: bool) -> pd.DataFrame:
+    arr = scaler.transform(X)
+    if clip:
+        arr = np.clip(arr, 0.0, 1.0)
+    return pd.DataFrame(arr.astype("float32"), columns=X.columns, index=X.index)
+
+
+
+
+>>>>>>> ceadd6b38bba39569737c8205a901df3c1423323
 def fit_and_scale_splits(
     X_train: pd.DataFrame,
     X_val: pd.DataFrame,

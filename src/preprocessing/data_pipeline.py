@@ -25,12 +25,21 @@ from src.preprocessing.scaling import (
     scale_external_data,
 )
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ceadd6b38bba39569737c8205a901df3c1423323
 ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = ROOT / "data" / "raw"
 PROCESSED_DIR = ROOT / "data" / "processed"
 TWIN_CACHE = PROCESSED_DIR / "twin_drop_index.json"
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> ceadd6b38bba39569737c8205a901df3c1423323
 def _row_hashes(X: pd.DataFrame, y: pd.Series) -> pd.Series:
     """64-bit hash of each row's features + label."""
     return pd.util.hash_pandas_object(X.assign(_y=y.to_numpy()), index=False)
@@ -80,6 +89,11 @@ def remove_cross_split_twins(
     )
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> ceadd6b38bba39569737c8205a901df3c1423323
 def run_pipeline(
     held_out_attack: str = "PortScan",
     sample_fraction: float = None,
@@ -247,6 +261,12 @@ def run_pipeline(
     print(f"\n[✓] Preprocessing completed in {elapsed:.1f} seconds.")
     print(f"[✓] Artifacts created in: {out_dir.resolve()}")
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> ceadd6b38bba39569737c8205a901df3c1423323
 if __name__ == "__main__":
     # Order matters: the base run creates twin_drop_index.json for the log1p run.
     run_pipeline(held_out_attack="PortScan", merge_web=True, use_log1p=False)

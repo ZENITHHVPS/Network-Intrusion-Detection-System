@@ -1,5 +1,5 @@
 data/*
-results/eda
+results/eda/*
 __pycache__/
 *pyc
 .venv

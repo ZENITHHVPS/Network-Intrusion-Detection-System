@@ -1,0 +1,26 @@
+{
+  "model": "Random Forest (tuned)",
+  "split": "val",
+  "n_flows": 319674,
+  "accuracy": 0.9991616459267879,
+  "macro_precision": 0.965659271371193,
+  "macro_recall": 0.9928089187781274,
+  "macro_f1": 0.977051825046543,
+  "macro_f1_excl_small_classes": 0.9724621900558515,
+  "small_classes_excluded": [
+    "Heartbleed",
+    "Infiltration"
+  ],
+  "weighted_f1": 0.9991943222336437,
+  "mcc": 0.9970020464160421,
+  "macro_roc_auc_ovr": 0.9993446204085864,
+  "false_positive_rate": 0.00076068201636394,
+  "attack_detection_rate": 0.9991032105063872,
+  "attack_type_accuracy": 0.9996409622212471,
+  "false_alarms": 205,
+  "missed_attacks": 45,
+  "inference_us_per_flow": 11.616901281241237,
+  "throughput_flows_per_s": 86081.47523942396,
+  "model_size_mb": 25.871811,
+  "train_seconds": null
+}

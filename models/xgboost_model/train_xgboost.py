@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Member 2 - XGBoost for known-attack classification (CICIDS2017, Hybrid NIDS project).
 
@@ -91,7 +90,6 @@ SEARCH_SPACE = dict(
 
 
 # Data loading
-
 def load(quick=False):
     X = {s: pd.read_parquet(DATA / f"X_{s}_supervised.parquet") for s in ("train", "val", "test")}
     y = {s: pd.read_parquet(DATA / f"y_{s}_supervised.parquet")["Label"].astype("int32")
@@ -136,7 +134,6 @@ def class_weights(y, scheme):
 
 
 # Training and evaluation
-
 def fit(params, Xtr, ytr, Xval, yval, weights, device):
     # validation set is passed in only for early stopping
     model = XGBClassifier(**{**FIXED, **params}, device=device)
@@ -289,7 +286,6 @@ def log(msg):
 
 
 # Stages
-
 def stage_baseline(X, y, names, device):
     # class imbalance analysis (train distribution)
     dist = pd.DataFrame({s: y[s].value_counts() for s in y}).fillna(0).astype(int)
